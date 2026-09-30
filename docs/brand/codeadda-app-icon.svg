@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CodeAdda">
+  <rect width="64" height="64" rx="14" fill="#1C1917"/>
+  <g transform="translate(9 9) scale(0.72)">
+    <rect x="4" y="5" width="56" height="44" rx="14" fill="#F97316"/>
+    <polygon points="14,43 31,43 11,60" fill="#F97316"/>
+    <g fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22,19 14,27 22,35"/>
+      <polyline points="42,19 50,27 42,35"/>
+      <line x1="35" y1="16" x2="29" y2="38"/>
+    </g>
+  </g>
+</svg>

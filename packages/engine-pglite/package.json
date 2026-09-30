@@ -1,0 +1,13 @@
+{
+  "name": "@codeadda/engine-pglite",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@codeadda/core": "*",
+    "@electric-sql/pglite": "^0.3.16"
+  }
+}

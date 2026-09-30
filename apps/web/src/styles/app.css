@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.25rem;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --breakpoint-lab: 56.25rem;
+}
+
+/* Tailwind keys deliberately differ from token names so nothing refers to itself. */
+@theme inline {
+  --color-page: var(--color-bg-primary);
+  --color-surface: var(--color-bg-secondary);
+  --color-subtle: var(--color-bg-tertiary);
+  --color-hover: var(--color-bg-hover);
+  --color-inverse: var(--color-bg-inverse);
+  --color-on-inverse: var(--color-text-inverse);
+  --color-ink: var(--color-text-primary);
+  --color-muted: var(--color-text-secondary);
+  --color-faint: var(--color-text-muted);
+  --color-line: var(--color-border);
+  --color-line-strong: var(--color-border-hover);
+  --color-hair: var(--color-hairline);
+  --color-wash: var(--color-overlay);
+  --color-wash-strong: var(--color-overlay-strong);
+  --color-backdrop: var(--color-scrim);
+  --color-brand: var(--color-accent);
+  --color-brand-hover: var(--color-accent-hover);
+  --color-brand-muted: var(--color-accent-muted);
+  --color-brand-line: var(--color-accent-border);
+  --color-brand-glow: var(--color-accent-glow);
+  --color-ok: var(--color-success);
+  --color-ok-bg: var(--color-success-bg);
+  --color-ok-line: var(--color-success-border);
+  --color-bad: var(--color-error);
+  --color-bad-bg: var(--color-error-bg);
+  --color-bad-line: var(--color-error-border);
+  --color-warn: var(--color-warning);
+  --color-warn-bg: var(--color-warning-bg);
+  --color-warn-line: var(--color-warning-border);
+  --color-note: var(--color-info);
+  --color-note-bg: var(--color-info-bg);
+  --color-note-line: var(--color-info-border);
+  --shadow-soft: var(--shadow-sm);
+  --shadow-raised: var(--shadow-md);
+  --shadow-float: var(--shadow-lg);
+  --shadow-glow: var(--shadow-accent);
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+  html {
+    font-size: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+}
+
+@layer components {
+  .fs-list { zoom: var(--fs-list, 1); }
+  .fs-content { zoom: var(--fs-content, 1); }
+  .fs-schema { zoom: var(--fs-schema, 1); }
+  .fs-results { zoom: var(--fs-results, 1); }
+  /* Filled track: accent up to the thumb (--fill, set inline), border colour after it. */
+  .size-slider {
+    appearance: none; height: 4px; border-radius: 9999px; cursor: pointer; accent-color: var(--color-accent);
+    background: linear-gradient(to right, var(--color-accent) var(--fill, 50%), var(--color-border) var(--fill, 50%));
+  }
+  .size-slider::-webkit-slider-thumb {
+    appearance: none; width: 14px; height: 14px; border-radius: 9999px;
+    background: var(--color-accent); border: 2px solid var(--color-bg-secondary); box-shadow: 0 0 0 1px var(--color-accent-border);
+  }
+  .size-slider::-moz-range-thumb {
+    width: 10px; height: 10px; border-radius: 9999px;
+    background: var(--color-accent); border: 2px solid var(--color-bg-secondary); box-shadow: 0 0 0 1px var(--color-accent-border);
+  }
+  .size-slider:focus-visible { outline: 2px solid var(--color-accent-border); outline-offset: 4px; }
+  .graph-paper {
+    background-color: var(--color-bg-secondary);
+    background-image:
+      linear-gradient(var(--color-grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-grid-line) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  /* Shared by the in-app PageLoader and the pre-app loader in index.html (keep the two in sync). */
+  .page-spinner {
+    width: 28px; height: 28px; box-sizing: border-box; border-radius: 9999px;
+    border: 2px solid var(--color-border); border-top-color: var(--color-accent);
+    animation: page-spin 0.9s linear infinite;
+  }
+  @keyframes page-spin { to { transform: rotate(360deg); } }
+  @keyframes page-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  @media (prefers-reduced-motion: reduce) {
+    .page-spinner { animation: page-pulse 1.6s ease-in-out infinite; }
+  }
+  @keyframes step-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .step-fill { transform-origin: left; animation: step-fill var(--step-ms, 4500ms) linear forwards; }
+  @media (prefers-reduced-motion: reduce) {
+    .step-fill { animation: none; }
+  }
+  .md > * + * { margin-top: 0.75rem; }
+  .md p, .md li { line-height: 1.65; color: var(--color-text-secondary); }
+  .md strong { color: var(--color-text-primary); font-weight: 600; }
+  .md ul { list-style: disc; padding-left: 1.25rem; }
+  .md ol { list-style: decimal; padding-left: 1.25rem; }
+  .md a { color: var(--color-accent); text-decoration: underline; }
+  .md code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-hairline);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    color: var(--color-text-primary);
+  }
+  .md pre {
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+  }
+  .md pre code { background: none; border: 0; padding: 0; }
+  .md table { border-collapse: collapse; font-size: var(--text-sm); }
+  .md th, .md td { border: 1px solid var(--color-border); padding: 0.3rem 0.6rem; text-align: left; }
+  .md th { background: var(--color-bg-tertiary); }
+}

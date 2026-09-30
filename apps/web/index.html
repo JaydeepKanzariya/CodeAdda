@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>CodeAdda</title>
+    <style>
+      /* Pre-app loader: runs before tokens.css exists, so it mirrors those values as raw hex. */
+      #root > .boot-shell { --b-bg: #faf7f2; --b-surface: #ffffff; --b-ink: #1c1917; --b-fg: #57534e; --b-line: #e7e0d5; --b-accent: #f97316; }
+      :root[data-theme=dark] #root > .boot-shell { --b-bg: #111010; --b-surface: #181716; --b-ink: #f5f2ed; --b-fg: #a8a29e; --b-line: rgba(255, 255, 255, 0.08); --b-accent: #fb923c; }
+      html { background: #faf7f2; }
+      html[data-theme='dark'] { background: #111010; }
+      body { margin: 0; }
+      .boot-shell { background: var(--b-bg); color: var(--b-fg); font: 14px/1.4 'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+      /* Static copy of <Navbar> (56px, centred 1440px container) so the header never pops in. */
+      .boot-nav { box-sizing: border-box; height: 56px; border-bottom: 1px solid var(--b-line); background: var(--b-surface); }
+      .boot-nav div { box-sizing: border-box; display: flex; align-items: center; gap: 8px; max-width: 1440px; height: 100%; margin: 0 auto; padding: 0 24px; font-size: 18px; font-weight: 700; letter-spacing: -0.025em; color: var(--b-ink); }
+      .boot-nav svg { width: 32px; height: 32px; }
+      .boot-nav b { color: var(--b-accent); }
+      .boot { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: calc(100vh - 56px); min-height: calc(100dvh - 56px); }
+      .boot i { display: block; box-sizing: border-box; width: 28px; height: 28px; border-radius: 9999px; border: 2px solid var(--b-line); border-top-color: var(--b-accent); animation: boot-spin 0.9s linear infinite; }
+      .boot p { margin: 16px 0 0; font-size: 14px; }
+      @keyframes boot-spin { to { transform: rotate(360deg); } }
+      @keyframes boot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+      @media (prefers-reduced-motion: reduce) { .boot i { animation: boot-pulse 1.6s ease-in-out infinite; } }
+    </style>
+    <script>
+      try {
+        var p = JSON.parse(localStorage.getItem('codeadda:prefs') || localStorage.getItem('dblabs:prefs') || '{}');
+        var t = p.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        var z = p.textSizes || {};
+        ['list', 'content', 'schema', 'results'].forEach(function (a) {
+          var v = Number(z[a] != null ? z[a] : p.fontScale);
+          if (isFinite(v) && v > 0) document.documentElement.style.setProperty('--fs-' + a, String(Math.min(1.5, Math.max(0.75, v))));
+        });
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <div class="boot-shell">
+        <div class="boot-nav"><div><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="5" width="56" height="44" rx="14" style="fill: var(--b-accent)" /><polygon points="14,43 31,43 11,60" style="fill: var(--b-accent)" /><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22,19 14,27 22,35" /><polyline points="42,19 50,27 42,35" /><line x1="35" y1="16" x2="29" y2="38" /></g></svg><span>Code<b>Adda</b></span></div></div>
+        <div class="boot" role="status" aria-live="polite"><i aria-hidden="true"></i><p>Initializing CodeAdda SQLab database…</p></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
