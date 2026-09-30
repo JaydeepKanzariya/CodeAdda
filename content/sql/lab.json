@@ -1,0 +1,14 @@
+{
+  "id": "sql",
+  "title": "SQL Lab",
+  "subtitle": "Learn SQL, one query at a time",
+  "sidebarTitle": "The SQL Codex",
+  "sidebarSubtitle": "Begin your journey as a Data Architect",
+  "problemsSubtitle": "LeetCode-style practice",
+  "language": "sql",
+  "chapters": [
+    "Querying Data", "Sorting Data", "Filtering Data", "Joining Tables", "Grouping Data", "Subqueries",
+    "Set Operators", "Modifying Data", "Common Table Expressions", "Advanced Topics", "Data Types & Constraints"
+  ],
+  "problemGroups": ["SELECT", "Basic Joins", "Easy Challenges"]
+}

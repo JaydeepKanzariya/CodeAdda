@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" role="img" aria-label="CodeAdda">
+  <!-- Wordmark uses Outfit 700; convert text to outlines before using outside the web app. -->
+  <rect x="4" y="5" width="56" height="44" rx="14" fill="#FB923C"/>
+  <polygon points="14,43 31,43 11,60" fill="#FB923C"/>
+  <g fill="none" stroke="#1C1917" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="22,19 14,27 22,35"/>
+    <polyline points="42,19 50,27 42,35"/>
+    <line x1="35" y1="16" x2="29" y2="38"/>
+  </g>
+  <text x="74" y="43" font-family="Outfit, Poppins, 'Segoe UI', sans-serif" font-weight="700" font-size="38" letter-spacing="-0.5"><tspan fill="#FAF7F2">Code</tspan><tspan fill="#FB923C">Adda</tspan></text>
+</svg>
