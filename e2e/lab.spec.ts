@@ -282,3 +282,22 @@ test.describe('home page', () => {
     expect(urls.filter((u) => /monaco/i.test(u))).toEqual([]);
   });
 });
+
+test('navbar on a phone: lab links swipe without a scrollbar and the page never scrolls sideways', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/');
+  const nav = page.getByRole('navigation', { name: 'Labs' });
+  await expect(nav.getByRole('link', { name: 'CodeAdda home' })).toBeVisible();
+  await expect(nav.getByRole('button', { name: /Switch to (dark|light) mode/ })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'SQL Lab' })).toBeInViewport();
+
+  const strip = page.getByTestId('lab-links');
+  expect(await strip.evaluate((el) => getComputedStyle(el).scrollbarWidth)).toBe('none');
+  await strip.evaluate((el) => el.scrollTo({ left: el.scrollWidth }));
+  // 0.95, not 1: the scroll end lands on a sub-pixel position.
+  await expect(nav.getByText('Redis')).toBeInViewport({ ratio: 0.95 });
+  await expect(nav.getByText('Redis')).toBeVisible();
+
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
+});
