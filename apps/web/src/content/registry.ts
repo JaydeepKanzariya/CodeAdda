@@ -50,3 +50,12 @@ export const labs: Lab[] = buildRegistry(
 export function getLab(id: string): Lab | undefined {
   return labs.find((l) => l.id === id);
 }
+
+/** Labs announced in the navbar, lab grid and footer before their content folder exists. */
+export const UPCOMING_LABS = ['PostgreSQL', 'MongoDB', 'Redis'] as const;
+export type UpcomingLab = (typeof UPCOMING_LABS)[number];
+
+/** Upcoming names that are not yet live. A lab is live once the registry has a lab whose title starts with the name. */
+export function upcomingLabs(live: Lab[] = labs): UpcomingLab[] {
+  return UPCOMING_LABS.filter((u) => !live.some((l) => l.title.startsWith(u)));
+}

@@ -21,6 +21,7 @@
   --color-accent-muted: rgba(249, 115, 22, 0.1);
   --color-accent-border: rgba(249, 115, 22, 0.3);
   --color-accent-glow: rgba(249, 115, 22, 0.18);
+  --color-accent-text: #c2410c; /* orange for small text: 4.8:1 on bg-primary, where #f97316 is only 2.7:1 */
   --color-success: #15803d;
   --color-success-bg: #dcfce7;
   --color-success-border: #bbf7d0;
@@ -62,6 +63,7 @@
   --color-accent-muted: rgba(251, 146, 60, 0.12);
   --color-accent-border: rgba(251, 146, 60, 0.3);
   --color-accent-glow: rgba(251, 146, 60, 0.22);
+  --color-accent-text: #fb923c;
   --color-success: #4ade80;
   --color-success-bg: rgba(74, 222, 128, 0.12);
   --color-success-border: rgba(74, 222, 128, 0.3);

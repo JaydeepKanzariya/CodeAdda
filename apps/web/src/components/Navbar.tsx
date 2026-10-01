@@ -1,10 +1,8 @@
 import { Link, NavLink } from 'react-router';
-import { labs } from '../content/registry';
+import { labs, upcomingLabs } from '../content/registry';
 import { cx } from '../lib/cx';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
-
-const UPCOMING = ['PostgreSQL', 'MongoDB', 'Redis'];
 
 export function Navbar() {
   return (
@@ -25,7 +23,7 @@ export function Navbar() {
               {lab.title}
             </NavLink>
           ))}
-          {UPCOMING.filter((u) => !labs.some((l) => l.title.startsWith(u))).map((u) => (
+          {upcomingLabs().map((u) => (
             <span key={u} aria-disabled="true" title="Coming soon" className="cursor-default whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium text-faint">
               {u}
             </span>

@@ -14,7 +14,7 @@ test.afterEach(() => {
 });
 
 async function openFirstLesson(page: Page) {
-  await page.goto('/');
+  await page.goto('/sql');
   await expect(page.getByRole('heading', { level: 1, name: 'SELECT All Columns' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Run Query' })).toBeEnabled();
 }
@@ -232,4 +232,53 @@ test('the strip is not rendered below the desktop breakpoint', async ({ page }) 
   await openFirstLesson(page);
   await expect(page.getByRole('button', { name: 'Hide lesson list' })).toBeHidden();
   await expect(page.getByRole('button', { name: 'Open lesson list' })).toBeVisible();
+});
+
+test.describe('home page', () => {
+  test('renders every band and leads into the first lesson, offline', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Pull up a chair');
+    const labs = page.getByRole('region', { name: 'One lab is open. Three more are cooking.' });
+    await expect(labs.getByRole('listitem')).toHaveCount(4);
+    await expect(page.getByRole('link', { name: /MongoDB/ })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Read, run, check, repeat' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Built so practice turns into habit.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'The database is already running.' })).toBeVisible();
+    await expect(page.getByRole('contentinfo')).toContainText('CodeAdda');
+    await page.getByRole('link', { name: 'Start the SQL lab' }).click();
+    await expect(page).toHaveURL(/\/sql\/lessons\/select-all$/);
+    await expect(page.getByRole('heading', { level: 1, name: 'SELECT All Columns' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Run Query' })).toBeEnabled();
+  });
+
+  for (const [width, height] of [[375, 812], [1024, 768]] as const) {
+    test(`never scrolls sideways at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      await page.goto('/');
+      await expect(page.getByText('Correct!')).toBeVisible();
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+
+  test('renders in dark mode from saved prefs', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('codeadda:prefs', JSON.stringify({ theme: 'dark' })));
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  });
+
+  test('shows the Correct! pill immediately when motion is reduced', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await expect(page.getByText('Correct!')).toBeVisible({ timeout: 1500 });
+  });
+
+  test('does not download the editor', async ({ page }) => {
+    const urls: string[] = [];
+    page.on('request', (r) => urls.push(r.url()));
+    await page.goto('/');
+    await expect(page.getByText('Correct!')).toBeVisible();
+    expect(urls.filter((u) => /monaco/i.test(u))).toEqual([]);
+  });
 });
