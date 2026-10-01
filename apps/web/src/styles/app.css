@@ -32,6 +32,20 @@
   }
 }
 
+/* Scrollable but without a visible scrollbar (swipe / trackpad still work). */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Fades the right edge so a cut-off row of links reads as "more this way". */
+@utility fade-end {
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 1.5rem), transparent);
+  mask-image: linear-gradient(to right, black calc(100% - 1.5rem), transparent);
+}
+
 /* Tailwind keys deliberately differ from token names so nothing refers to itself. */
 @theme inline {
   --color-page: var(--color-bg-primary);

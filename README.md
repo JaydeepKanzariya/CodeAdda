@@ -1,7 +1,8 @@
 # CodeAdda
 
-Interactive labs for learning databases by writing real queries. Stage 1 ships the **SQL lab**
-(63 lessons, 10 problems) running real PostgreSQL in your browser via PGlite.
+Interactive labs for learning databases by writing real queries. The **SQL lab** is live
+(62 lessons across 11 chapters, plus 8 practice problems), running real PostgreSQL in your
+browser via PGlite. PostgreSQL, MongoDB and Redis labs are coming next.
 
 ## Run it
 
@@ -9,6 +10,9 @@ Interactive labs for learning databases by writing real queries. Stage 1 ships t
 npm install
 npm run dev          # http://localhost:5173
 ```
+
+`/` is the home page (the labs, how it works, and a live example); `/sql` opens the SQL lab.
+Everything runs in the browser, with no server and no account.
 
 ## Checks
 

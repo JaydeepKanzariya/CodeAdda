@@ -18,6 +18,9 @@
       .boot-nav div { box-sizing: border-box; display: flex; align-items: center; gap: 8px; max-width: 1440px; height: 100%; margin: 0 auto; padding: 0 24px; font-size: 18px; font-weight: 700; letter-spacing: -0.025em; color: var(--b-ink); }
       .boot-nav svg { width: 32px; height: 32px; }
       .boot-nav b { color: var(--b-accent); }
+      /* Same breakpoints as <Navbar>/<Logo>: 16px side padding below md, icon-only logo below sm. */
+      @media (max-width: 767.98px) { .boot-nav div { padding: 0 16px; } }
+      @media (max-width: 639.98px) { .boot-nav span { display: none; } }
       .boot { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: calc(100vh - 56px); min-height: calc(100dvh - 56px); }
       .boot i { display: block; box-sizing: border-box; width: 28px; height: 28px; border-radius: 9999px; border: 2px solid var(--b-line); border-top-color: var(--b-accent); animation: boot-spin 0.9s linear infinite; }
       .boot p { margin: 16px 0 0; font-size: 14px; }
