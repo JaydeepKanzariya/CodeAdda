@@ -16,6 +16,20 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
   --breakpoint-lab: 56.25rem;
+  --animate-rise: home-rise 0.6s ease-out both;
+  --animate-pop: home-pop 0.42s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+  --animate-blink: home-blink 1.1s steps(2, start) infinite;
+  @keyframes home-rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes home-pop {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes home-blink {
+    to { visibility: hidden; }
+  }
 }
 
 /* Tailwind keys deliberately differ from token names so nothing refers to itself. */
@@ -40,6 +54,7 @@
   --color-brand-muted: var(--color-accent-muted);
   --color-brand-line: var(--color-accent-border);
   --color-brand-glow: var(--color-accent-glow);
+  --color-brand-strong: var(--color-accent-text);
   --color-ok: var(--color-success);
   --color-ok-bg: var(--color-success-bg);
   --color-ok-line: var(--color-success-border);
@@ -105,6 +120,23 @@
       linear-gradient(var(--color-grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--color-grid-line) 1px, transparent 1px);
     background-size: 20px 20px;
+  }
+  /* Home page hero: masked dot grid plus a soft glow behind the code card. Siblings, not ::after, so the mask does not eat the glow. */
+  .home-hero-bg {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.7;
+    background-image: radial-gradient(var(--color-border-hover) 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: radial-gradient(70% 60% at 65% 40%, #000 0%, transparent 70%);
+    mask-image: radial-gradient(70% 60% at 65% 40%, #000 0%, transparent 70%);
+  }
+  .home-hero-glow {
+    position: absolute; pointer-events: none; opacity: 0.6;
+    width: 54rem; height: 46rem; right: -9rem; top: -8rem;
+    background: radial-gradient(closest-side, var(--color-accent-glow), transparent);
+  }
+  .home-cta-glow {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.7;
+    background: radial-gradient(50% 120% at 100% 50%, var(--color-accent-glow), transparent 70%);
   }
   /* Shared by the in-app PageLoader and the pre-app loader in index.html (keep the two in sync). */
   .page-spinner {

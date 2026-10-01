@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildRegistry, getLab, labs } from './registry';
+import { buildRegistry, getLab, labs, UPCOMING_LABS, upcomingLabs } from './registry';
 
 const lesson = `---
 id: a
@@ -47,5 +47,20 @@ describe('real content', () => {
     expect(labs[0]?.id).toBe('sql');
     expect(getLab('sql')?.lessons[0]?.title).toBe('Querying Data');
     expect(getLab('sql')?.errors).toEqual([]);
+  });
+});
+
+describe('upcomingLabs', () => {
+  it('lists every upcoming name when none is live', () => {
+    expect(upcomingLabs([])).toEqual([...UPCOMING_LABS]);
+  });
+
+  it('drops names that are live (a registry lab whose title starts with the name)', () => {
+    const live = [{ id: 'postgres', title: 'PostgreSQL Lab' }] as unknown as Parameters<typeof upcomingLabs>[0];
+    expect(upcomingLabs(live)).toEqual(['MongoDB', 'Redis']);
+  });
+
+  it('defaults to the real registry, where only SQL is live today', () => {
+    expect(upcomingLabs()).toEqual(['PostgreSQL', 'MongoDB', 'Redis']);
   });
 });
