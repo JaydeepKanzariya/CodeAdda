@@ -91,6 +91,31 @@ describe('Sidebar', () => {
     await userEvent.click(screen.getByRole('link', { name: /Title a/ }));
     expect(onCloseDrawer).toHaveBeenCalled();
   });
+
+  it('shows a level heading above the first chapter of each level, lessons tab only', () => {
+    const leveled = { ...lab, levels: [{ title: 'Beginner', from: 'Basics' }, { title: 'Intermediate', from: 'Joins' }] };
+    const { unmount } = render(
+      <MemoryRouter>
+        <Sidebar lab={leveled} tab="lessons" activeId="b" collapsed={false} drawerOpen={false} onCloseDrawer={() => {}} isComplete={() => false} />
+      </MemoryRouter>,
+    );
+    const headings = screen.getAllByRole('heading', { level: 3 });
+    expect(headings.map((h) => h.textContent)).toEqual(['Beginner', 'Intermediate']);
+    const order = Array.from(document.querySelectorAll('h3, button[aria-expanded]')).map((e) => e.textContent?.trim());
+    expect(order).toEqual(['Beginner', 'Basics', 'Intermediate', 'Joins']);
+    unmount();
+    render(
+      <MemoryRouter>
+        <Sidebar lab={leveled} tab="problems" activeId="b" collapsed={false} drawerOpen={false} onCloseDrawer={() => {}} isComplete={() => false} />
+      </MemoryRouter>,
+    );
+    expect(screen.queryAllByRole('heading', { level: 3 })).toHaveLength(0);
+  });
+
+  it('shows no level headings for a lab without levels', () => {
+    renderSidebar('b');
+    expect(screen.queryAllByRole('heading', { level: 3 })).toHaveLength(0);
+  });
 });
 
 describe('Sidebar drawer accessibility', () => {

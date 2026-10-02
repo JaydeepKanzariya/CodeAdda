@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import type { Lab, LessonItem } from '@codeadda/core';
 import { LessonFlow } from './LessonFlow';
 import type { LabEngine } from './useLabEngine';
@@ -48,5 +49,31 @@ describe('LessonFlow', () => {
   it('shows a note instead of the player when the script is broken', () => {
     render(<LessonFlow lab={lab} tab="lessons" item={{ ...base, stepsError: 'step 2: unknown table "x"' }} number={1} engine={engine} />);
     expect(screen.getByText(/animation could not be loaded/)).toBeInTheDocument();
+  });
+});
+
+describe('LessonFlow skip banner', () => {
+  const first: LessonItem = { ...base, id: 'first', chapter: 'Basics' };
+  const later: LessonItem = { ...base, id: 'later', chapter: 'Joins' };
+  const leveled = {
+    ...lab, id: 'pg', title: 'PostgreSQL Lab',
+    lessons: [{ title: 'Basics', items: [first] }, { title: 'Joins', items: [later] }],
+    levels: [{ title: 'Beginner', from: 'Basics' }, { title: 'Intermediate', from: 'Joins' }],
+  } as unknown as Lab;
+  const renderFlow = (l: Lab, item: LessonItem) =>
+    render(<MemoryRouter><LessonFlow lab={l} tab="lessons" item={item} number={1} engine={engine} /></MemoryRouter>);
+
+  it('shows on the first lesson and links to the first lesson of level 2', () => {
+    renderFlow(leveled, first);
+    expect(screen.getByText(/Already know SQL\?/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Skip to Intermediate →' })).toHaveAttribute('href', '/pg/lessons/later');
+  });
+
+  it('is absent on later lessons and in labs without levels', () => {
+    const { unmount } = renderFlow(leveled, later);
+    expect(screen.queryByText(/Already know SQL\?/)).toBeNull();
+    unmount();
+    renderFlow({ ...leveled, levels: undefined } as Lab, first);
+    expect(screen.queryByText(/Already know SQL\?/)).toBeNull();
   });
 });

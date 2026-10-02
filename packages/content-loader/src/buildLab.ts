@@ -41,6 +41,13 @@ export function buildLab(src: LabSource): Lab {
     parsed.push(r);
   }
 
+  // Levels are checked against lab.json's chapter list (not the built chapters, which drop empty ones).
+  const levels = meta.levels?.filter((l) => {
+    if (meta.chapters.includes(l.from)) return true;
+    errors.push({ path: 'lab.json', message: `levels: "${l.from}" is not a chapter` });
+    return false;
+  });
+
   const group = (kind: ItemKind, titles: string[]): Chapter[] =>
     titles
       .map((title) => ({
@@ -59,6 +66,7 @@ export function buildLab(src: LabSource): Lab {
     sidebarTitle: meta.sidebarTitle,
     sidebarSubtitle: meta.sidebarSubtitle,
     problemsSubtitle: meta.problemsSubtitle,
+    ...(levels ? { levels } : {}),
     lessons: group('lesson', meta.chapters),
     problems: group('problem', meta.problemGroups),
     datasets,

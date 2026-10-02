@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Lab, LessonItem } from '@codeadda/core';
 import { UPCOMING_LABS } from '../content/registry';
-import { FEATURES, HERO_DEMO, LIVE_DESCRIPTIONS, STEPS, UPCOMING_COPY, demoSql, labStats, labsHeadline, labsLead } from './homeContent';
+import { FEATURES, HERO_DEMO, LIVE_DESCRIPTIONS, STEPS, UPCOMING_COPY, demoSql, heroPill, labStats, labsHeadline, labsLead } from './homeContent';
 
 const item = (id: string, kind: 'lesson' | 'problem', steps = false): LessonItem => ({
   kind, id, title: id, chapter: 'A', order: 1, dataset: 'd', check: 'rows-unordered', body: '', task: '', hints: [], solution: '', path: '',
@@ -98,5 +98,20 @@ describe('labs heading and lead', () => {
     expect(labsHeadline(2, 0)).toBe('Two labs are open.');
     expect(labsLead([], 3)).toBe('Every lab pairs short lessons with a live database and an instant check. The first lab is being written.');
     expect(labsLead(['SQL'], 0)).toBe('Every lab pairs short lessons with a live database and an instant check. SQL is ready now.');
+  });
+});
+
+describe('heroPill', () => {
+  const mk = (id: string, title: string, n: number) =>
+    ({ ...lab, id, title, lessons: [{ title: 'A', items: Array.from({ length: n }, (_, i) => item(`${id}${i}`, 'lesson')) }], problems: [] }) as Lab;
+
+  it('reads like today with one lab, counts all labs with two, and says soon with none', () => {
+    expect(heroPill([mk('sql', 'SQL Lab', 5)])).toBe('SQL lab now open · 5 exercises');
+    expect(heroPill([mk('sql', 'SQL Lab', 5), mk('postgres', 'PostgreSQL Lab', 3)])).toBe('Two labs open · 8 exercises');
+    expect(heroPill([])).toBe('Labs opening soon');
+  });
+
+  it('has a card description for the PostgreSQL lab', () => {
+    expect(LIVE_DESCRIPTIONS.postgres).toBe('From your first table to JSONB, window functions and indexes, all on a food-delivery database.');
   });
 });

@@ -238,7 +238,7 @@ test.describe('home page', () => {
   test('renders every band and leads into the first lesson, offline', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Pull up a chair');
-    const labs = page.getByRole('region', { name: 'One lab is open. Three more are cooking.' });
+    const labs = page.getByRole('region', { name: 'Two labs are open. Two more are cooking.' });
     await expect(labs.getByRole('listitem')).toHaveCount(4);
     await expect(page.getByRole('link', { name: /MongoDB/ })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Read, run, check, repeat' })).toBeVisible();
@@ -289,7 +289,7 @@ test('navbar on a phone: lab links swipe without a scrollbar and the page never 
   const nav = page.getByRole('navigation', { name: 'Labs' });
   await expect(nav.getByRole('link', { name: 'CodeAdda home' })).toBeVisible();
   await expect(nav.getByRole('button', { name: /Switch to (dark|light) mode/ })).toBeVisible();
-  await expect(nav.getByRole('link', { name: 'SQL Lab' })).toBeInViewport();
+  await expect(nav.getByRole('link', { name: 'SQL Lab', exact: true })).toBeInViewport();
 
   const strip = page.getByTestId('lab-links');
   expect(await strip.evaluate((el) => getComputedStyle(el).scrollbarWidth)).toBe('none');
@@ -300,4 +300,41 @@ test('navbar on a phone: lab links swipe without a scrollbar and the page never 
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test.describe('postgres lab', () => {
+  test('the first lesson solves, and the skip banner jumps to Intermediate without a reload', async ({ page }) => {
+    await page.goto('/postgres');
+    await expect(page.getByRole('heading', { level: 1, name: 'Your first query' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Run Query' })).toBeEnabled();
+    await page.getByRole('button', { name: /Solution/ }).click();
+    await page.getByRole('button', { name: 'Load into editor' }).click();
+    await page.getByRole('button', { name: 'Run Query' }).click();
+    await expect(page.getByText('Correct!')).toBeVisible();
+
+    await page.evaluate(() => ((window as unknown as { __noReload: boolean }).__noReload = true));
+    await page.getByRole('link', { name: 'Skip to Intermediate →' }).click();
+    await expect(page).toHaveURL(/\/postgres\/lessons\/inner-join$/);
+    await expect(page.getByRole('heading', { level: 1, name: 'Inner join' })).toBeVisible();
+    expect(await page.evaluate(() => (window as unknown as { __noReload?: boolean }).__noReload)).toBe(true);
+  });
+
+  test('a JSONB lesson solves end to end', async ({ page }) => {
+    await page.goto('/postgres/lessons/reading-values');
+    await expect(page.getByRole('button', { name: 'Run Query' })).toBeEnabled();
+    await page.getByRole('button', { name: /Solution/ }).click();
+    await page.getByRole('button', { name: 'Load into editor' }).click();
+    await page.getByRole('button', { name: 'Run Query' }).click();
+    await expect(page.getByText('Correct!')).toBeVisible();
+  });
+
+  test('the sidebar shows the three levels and the home page links to the lab', async ({ page }) => {
+    await page.goto('/postgres/lessons/first-query');
+    const chapters = page.getByRole('navigation', { name: 'Chapters' });
+    await expect(chapters.getByRole('heading', { level: 3 })).toHaveText(['Beginner', 'Intermediate', 'Advanced']);
+    await page.goto('/');
+    const labs = page.getByRole('region', { name: 'Two labs are open. Two more are cooking.' });
+    await expect(labs.getByRole('link', { name: /PostgreSQL/ })).toHaveAttribute('href', '/postgres');
+    await expect(labs.getByText('Coming soon')).toHaveCount(2);
+  });
 });

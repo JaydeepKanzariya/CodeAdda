@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Monaco is bundled locally (see src/components/monacoSetup.ts), so @monaco-editor/loader's
@@ -18,8 +19,19 @@ function stripMonacoCdnDefault(): Plugin {
   };
 }
 
+/** content/ lives outside Vite's root, so watch it explicitly: new labs and lessons then trigger the glob in registry.ts. */
+function watchContent(): Plugin {
+  const contentDir = fileURLToPath(new URL('../../content', import.meta.url));
+  return {
+    name: 'codeadda:watch-content',
+    configureServer(server) {
+      server.watcher.add(contentDir);
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [stripMonacoCdnDefault(), react(), tailwindcss()],
+  plugins: [stripMonacoCdnDefault(), watchContent(), react(), tailwindcss()],
   // PGlite ships its own WASM; pre-bundling breaks its asset URLs.
   optimizeDeps: { exclude: ['@electric-sql/pglite'] },
   worker: { format: 'es' },
