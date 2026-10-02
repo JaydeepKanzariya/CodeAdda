@@ -109,6 +109,7 @@ export const FEATURES: Feature[] = [
 /** Card description per live lab id; a lab without an entry gets the generic line. */
 export const LIVE_DESCRIPTIONS: Record<string, string> = {
   sql: 'From your first SELECT to joins, CTEs and window functions, all on one realistic shop database.',
+  postgres: 'From your first table to JSONB, window functions and indexes, all on a food-delivery database.',
 };
 export const LIVE_DESCRIPTION_FALLBACK = 'Short lessons, a live database and an instant check, all inside your browser.';
 
@@ -126,4 +127,12 @@ export function labsLead(liveNames: string[], soon: number): string {
   if (liveNames.length === 0) return `${base} The first lab is being written.`;
   const ready = `${liveNames.join(' and ')} ${liveNames.length === 1 ? 'is' : 'are'} ready now`;
   return soon === 0 ? `${base} ${ready}.` : `${base} ${ready}; the others are being written.`;
+}
+
+/** Hero pill: unchanged wording with one lab, a count of labs and exercises with more. */
+export function heroPill(labs: Lab[]): string {
+  if (labs.length === 0) return 'Labs opening soon';
+  const total = labs.reduce((n, l) => n + labStats(l).total, 0);
+  if (labs.length === 1) return `${labs[0]!.title.replace(/\s+Lab$/, '')} lab now open · ${total} exercises`;
+  return `${word(labs.length)} labs open · ${total} exercises`;
 }

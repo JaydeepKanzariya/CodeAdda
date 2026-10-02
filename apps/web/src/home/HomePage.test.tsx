@@ -3,13 +3,13 @@ import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import type { Lab } from '@codeadda/core';
-import { UPCOMING_LABS, getLab } from '../content/registry';
+import { getLab, labs, upcomingLabs } from '../content/registry';
 import { progressStore } from '../state/progress';
-import { labStats } from './homeContent';
+import { heroPill, labStats } from './homeContent';
 import { HomePage } from './HomePage';
 
 const renderHome = () => render(<MemoryRouter><HomePage /></MemoryRouter>);
-const labsRegion = () => screen.getByRole('region', { name: 'One lab is open. Three more are cooking.' });
+const labsRegion = () => screen.getByRole('region', { name: 'Two labs are open. Two more are cooking.' });
 
 describe('HomePage', () => {
   it('has one h1, the primary link and the SQL card both pointing at /sql', () => {
@@ -28,7 +28,7 @@ describe('HomePage', () => {
     expect(value('SQL lessons')).toBe(String(stats.lessons));
     expect(value('practice problems')).toBe(String(stats.problems));
     expect(value('animated walkthroughs')).toBe(String(stats.animated));
-    expect(screen.getByText(`SQL lab now open · ${stats.total} exercises`)).toBeInTheDocument();
+    expect(screen.getByText(heroPill(labs))).toBeInTheDocument();
     expect(within(labsRegion()).getByText(`${stats.chapters} chapters · ${stats.total} exercises`)).toBeInTheDocument();
     expect(screen.getByText(new RegExp(`^${stats.animated} lessons animate`))).toBeInTheDocument();
   });
@@ -36,9 +36,9 @@ describe('HomePage', () => {
   it('renders the upcoming labs as non-clickable coming-soon cards', () => {
     renderHome();
     const region = labsRegion();
-    expect(within(region).getAllByRole('listitem')).toHaveLength(1 + UPCOMING_LABS.length);
-    expect(within(region).getAllByText('Coming soon')).toHaveLength(UPCOMING_LABS.length);
-    for (const name of UPCOMING_LABS) {
+    expect(within(region).getAllByRole('listitem')).toHaveLength(labs.length + upcomingLabs().length);
+    expect(within(region).getAllByText('Coming soon')).toHaveLength(upcomingLabs().length);
+    for (const name of upcomingLabs()) {
       const card = within(region).getByText(name).closest('[data-testid="coming-soon-card"]')!;
       expect(card).not.toBeNull();
       expect(card.querySelector('a, button')).toBeNull();
@@ -72,7 +72,7 @@ describe('HomePage', () => {
 
   it('says Open before any progress and Continue after a completed lesson', () => {
     const { unmount } = renderHome();
-    expect(within(labsRegion()).getByText('Open')).toBeInTheDocument();
+    expect(within(labsRegion()).getAllByText('Open')).toHaveLength(labs.length);
     unmount();
     progressStore.markComplete('sql', 'select-all');
     renderHome();

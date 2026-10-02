@@ -94,4 +94,27 @@ describe('buildLab', () => {
   it('throws on an invalid lab.json', () => {
     expect(() => buildLab({ labJson: '{"id":"x"}', files: {} })).toThrow();
   });
+
+  it('passes levels through when every "from" is a chapter', () => {
+    const lab = buildLab({
+      labJson: JSON.stringify({ ...JSON.parse(labJson), levels: [{ title: 'Beginner', from: 'Basics' }, { title: 'Next', from: 'More' }] }),
+      files: { 'datasets/tiny.sql': 'CREATE TABLE t (n int);', 'lessons/01-basics/01-a.md': file('a', 'Basics', 1) },
+    });
+    expect(lab.levels).toEqual([{ title: 'Beginner', from: 'Basics' }, { title: 'Next', from: 'More' }]);
+    expect(lab.errors).toEqual([]);
+  });
+
+  it('reports and drops a level whose "from" is not a chapter', () => {
+    const lab = buildLab({
+      labJson: JSON.stringify({ ...JSON.parse(labJson), levels: [{ title: 'Beginner', from: 'Basics' }, { title: 'Oops', from: 'Basicz' }] }),
+      files: { 'datasets/tiny.sql': 'CREATE TABLE t (n int);', 'lessons/01-basics/01-a.md': file('a', 'Basics', 1) },
+    });
+    expect(lab.levels).toEqual([{ title: 'Beginner', from: 'Basics' }]);
+    expect(lab.errors).toEqual([{ path: 'lab.json', message: 'levels: "Basicz" is not a chapter' }]);
+  });
+
+  it('leaves levels undefined when lab.json has none', () => {
+    const lab = buildLab({ labJson, files: { 'datasets/tiny.sql': 'CREATE TABLE t (n int);', 'lessons/01-basics/01-a.md': file('a', 'Basics', 1) } });
+    expect(lab.levels).toBeUndefined();
+  });
 });

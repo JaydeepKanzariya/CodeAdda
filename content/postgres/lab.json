@@ -1,0 +1,21 @@
+{
+  "id": "postgres",
+  "title": "PostgreSQL Lab",
+  "subtitle": "From your first table to JSONB and window functions",
+  "sidebarTitle": "The Postgres Path",
+  "sidebarSubtitle": "Beginner to advanced, one query at a time",
+  "problemsSubtitle": "Practice problems on the food-delivery database",
+  "language": "sql",
+  "chapters": [
+    "Meet Postgres", "Data types", "Creating tables", "Adding and reading data", "Changing data", "Constraints",
+    "Joins and relationships", "Aggregation", "Views", "RETURNING and UPSERT", "Identity and sequences", "Dates and generate_series",
+    "Arrays", "JSONB", "Window functions", "Indexes and EXPLAIN", "Transactions", "Full-text search"
+  ],
+  "problemGroups": ["Warm-up", "Everyday Postgres", "Power features"],
+  "levels": [
+    { "title": "Beginner", "from": "Meet Postgres" },
+    { "title": "Intermediate", "from": "Joins and relationships" },
+    { "title": "Advanced", "from": "Arrays" }
+  ]
+}
+

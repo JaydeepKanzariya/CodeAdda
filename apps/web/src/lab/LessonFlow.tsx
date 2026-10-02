@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import type { Lab, LessonItem, TableInfo } from '@codeadda/core';
 import { CheckBanner } from '../components/CheckBanner';
 import { ErrorScreen } from '../components/ErrorScreen';
@@ -14,7 +15,7 @@ import { StepPlayer } from '../components/StepPlayer';
 import { cx } from '../lib/cx';
 import { usePrefs } from '../state/prefs';
 import { progressStore } from '../state/progress';
-import type { Tab } from './navigation';
+import { skipTarget, type Tab } from './navigation';
 import { useDraftSaver } from './useDraftSaver';
 import { STARTER_SQL, type LabEngine } from './useLabEngine';
 
@@ -33,6 +34,9 @@ export function LessonFlow({ lab, tab, item, number, engine }: LessonFlowProps) 
 
   useDraftSaver((q) => progressStore.saveDraft(lab.id, item.id, q), query, 400);
 
+  // Only on a lab's very first lesson, and only for labs with at least two levels.
+  const skip = tab === 'lessons' && lab.lessons[0]?.items[0]?.id === item.id ? skipTarget(lab) : undefined;
+
   const run = () => {
     setPanel('results');
     void engine.run(query);
@@ -47,6 +51,15 @@ export function LessonFlow({ lab, tab, item, number, engine }: LessonFlowProps) 
       <div className="fs-content">
         <LessonHeader tab={tab} item={item} number={number} />
       </div>
+
+      {skip && (
+        <p className="fs-content max-w-[760px] rounded-md border border-note-line bg-note-bg px-4 py-2.5 text-sm text-note">
+          Already know SQL?{' '}
+          <Link to={skip.path} className="font-semibold underline underline-offset-2">
+            Skip to {skip.level} →
+          </Link>
+        </p>
+      )}
 
       {item.steps && (
         <section aria-labelledby="watch-it-happen" className="fs-content">

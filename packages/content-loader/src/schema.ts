@@ -27,6 +27,7 @@ export const labJson = z.object({
   sidebarTitle: z.string().optional(),
   sidebarSubtitle: z.string().optional(),
   problemsSubtitle: z.string().optional(),
+  levels: z.array(z.object({ title: z.string().min(1), from: z.string().min(1) })).optional(),
 });
 
 export function formatZodError(err: z.ZodError): string {

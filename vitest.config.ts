@@ -9,5 +9,8 @@ export default defineConfig({
     // PGlite boots in beforeAll hooks; on a loaded machine that can exceed the 10s default.
     hookTimeout: 30_000,
     setupFiles: ['./vitest.setup.ts'],
+    poolOptions: {
+      forks: { maxForks: 3 },
+    },
   },
 });

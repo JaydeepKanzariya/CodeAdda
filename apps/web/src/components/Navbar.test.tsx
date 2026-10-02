@@ -21,7 +21,8 @@ describe('Navbar', () => {
     renderAt('/');
     const strip = screen.getByTestId('lab-links');
     expect(within(strip).getByRole('link', { name: 'SQL Lab' })).toBeInTheDocument();
-    for (const name of ['PostgreSQL', 'MongoDB', 'Redis']) expect(within(strip).getByText(name)).toBeInTheDocument();
+    expect(within(strip).getByRole('link', { name: 'PostgreSQL Lab' })).toBeInTheDocument();
+    for (const name of ['MongoDB', 'Redis']) expect(within(strip).getByText(name)).toBeInTheDocument();
     expect(strip).toHaveClass('no-scrollbar');
   });
 

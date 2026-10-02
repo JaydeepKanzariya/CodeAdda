@@ -6,7 +6,7 @@ import { labs, upcomingLabs } from '../content/registry';
 import { cx } from '../lib/cx';
 import { useProgress } from '../state/progress';
 import { HeroDemo } from './HeroDemo';
-import { FEATURES, LIVE_DESCRIPTIONS, LIVE_DESCRIPTION_FALLBACK, STEPS, UPCOMING_COPY, labStats, labsHeadline, labsLead, type LabStats } from './homeContent';
+import { FEATURES, LIVE_DESCRIPTIONS, LIVE_DESCRIPTION_FALLBACK, STEPS, UPCOMING_COPY, heroPill, labStats, labsHeadline, labsLead, type LabStats } from './homeContent';
 import { Icon } from './icons';
 
 // Layout constants shared by every band (reference: 1120px container, 24px gutter, 88px section rhythm).
@@ -55,7 +55,7 @@ function Hero({ stats }: { stats?: LabStats }) {
         <div className="motion-safe:animate-rise">
           <p className="mb-5.5 inline-flex h-7 items-center gap-2 rounded-full border border-line bg-surface pr-3 pl-2.5 text-xs font-medium text-muted">
             <span aria-hidden="true" className="size-1.75 rounded-full bg-ok shadow-[0_0_0_3px_var(--color-success-bg)]" />
-            {stats ? `SQL lab now open · ${stats.total} exercises` : 'Labs opening soon'}
+            {heroPill(labs)}
           </p>
           <h1 id="hero-title" className="mb-5.5 text-[clamp(2.5rem,5.2vw,4rem)] font-bold leading-[1.02] tracking-[-0.035em] text-ink">
             Pull up a chair,

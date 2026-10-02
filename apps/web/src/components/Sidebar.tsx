@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Link } from 'react-router';
 import type { ContentError, Lab } from '@codeadda/core';
 import { cx } from '../lib/cx';
 import { useIsDesktop } from '../lib/useIsDesktop';
-import { chaptersFor, itemPath, type Tab } from '../lab/navigation';
+import { chaptersFor, itemPath, levelStarts, type Tab } from '../lab/navigation';
 import { Chevron } from './Chevron';
 
 export interface SidebarProps {
@@ -19,6 +19,9 @@ export interface SidebarProps {
 export const SIDEBAR_ID = 'lab-sidebar';
 
 const DOT = { Easy: 'bg-ok', Medium: 'bg-warn', Hard: 'bg-bad' } as const;
+
+// Level 1/2/3 dots: green, amber, red; any further level uses the brand colour.
+const LEVEL_DOT = ['bg-ok', 'bg-warn', 'bg-bad'];
 
 function ContentErrors({ errors }: { errors: ContentError[] }) {
   return (
@@ -37,6 +40,7 @@ function ContentErrors({ errors }: { errors: ContentError[] }) {
 
 export function Sidebar({ lab, tab, activeId, collapsed, drawerOpen, onCloseDrawer, isComplete }: SidebarProps) {
   const chapters = chaptersFor(lab, tab);
+  const levelAt = new Map(tab === 'lessons' ? levelStarts(lab).map((l) => [l.chapter, l]) : []);
   const activeChapter = chapters.find((ch) => ch.items.some((it) => it.id === activeId))?.title;
   // Lessons: only the chapter holding the active lesson starts open; problems: every group starts open.
   // `toggled` holds explicit open/closed state (user clicks and auto-opens) for the session.
@@ -90,57 +94,66 @@ export function Sidebar({ lab, tab, activeId, collapsed, drawerOpen, onCloseDraw
               const isOpen = toggled[ch.title] ?? tab === 'problems';
               const start = counter;
               counter += ch.items.length;
+              const level = levelAt.get(ch.title);
               return (
-                <section key={ch.title}>
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    onClick={() => setToggled((o) => ({ ...o, [ch.title]: !isOpen }))}
-                    className="flex w-full items-center gap-2 px-4 pt-4 pb-1.5 text-left text-[0.6875rem] font-semibold tracking-wider text-faint uppercase hover:text-ink"
-                  >
-                    <Chevron closed={!isOpen} className="size-2.5" />
-                    {ch.title}
-                  </button>
-                  {isOpen && (
-                    <ul>
-                      {ch.items.map((it, idx) => {
-                        const active = it.id === activeId;
-                        return (
-                          <li key={it.id}>
-                            <Link
-                              to={itemPath(lab.id, tab, it.id)}
-                              onClick={onCloseDrawer}
-                              aria-current={active ? 'page' : undefined}
-                              className={cx(
-                                'mx-2 flex gap-3 rounded-md px-2.5 py-2 text-sm transition-colors',
-                                tab === 'problems' ? 'items-start' : 'items-center',
-                                active ? 'bg-brand-muted font-medium text-ink' : 'text-ink hover:bg-hover',
-                              )}
-                            >
-                              {isComplete(it.id) ? (
-                                <span aria-label="completed" className="grid size-5 shrink-0 place-items-center rounded-full bg-ok-bg text-[0.625rem] font-bold text-ok">✓</span>
-                              ) : tab === 'problems' && it.difficulty ? (
-                                <span aria-label={it.difficulty} className={cx('mt-1.5 size-1.5 shrink-0 self-start rounded-full', DOT[it.difficulty])} />
-                              ) : (
-                                <span
-                                  data-badge
-                                  className={cx(
-                                    'grid size-5 shrink-0 place-items-center rounded-full font-mono text-[0.625rem]',
-                                    active ? 'bg-brand text-white' : 'bg-subtle text-muted',
-                                  )}
-                                >
-                                  {start + idx + 1}
-                                </span>
-                              )}
-                              <span className={cx('min-w-0 flex-1', tab === 'problems' ? 'leading-snug' : 'truncate')}>{it.title}</span>
-                              {it.steps && <span aria-label="has animation" className="text-[0.5rem] text-brand">▶</span>}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                <Fragment key={ch.title}>
+                  {level && (
+                    <h3 className="flex items-center gap-2 px-4 pt-5 pb-0.5 text-xs font-semibold tracking-wider text-muted uppercase">
+                      <span aria-hidden="true" className={cx('size-2 rounded-full', LEVEL_DOT[level.index] ?? 'bg-brand')} />
+                      {level.title}
+                    </h3>
                   )}
-                </section>
+                  <section>
+                    <button
+                      type="button"
+                      aria-expanded={isOpen}
+                      onClick={() => setToggled((o) => ({ ...o, [ch.title]: !isOpen }))}
+                      className="flex w-full items-center gap-2 px-4 pt-4 pb-1.5 text-left text-[0.6875rem] font-semibold tracking-wider text-faint uppercase hover:text-ink"
+                    >
+                      <Chevron closed={!isOpen} className="size-2.5" />
+                      {ch.title}
+                    </button>
+                    {isOpen && (
+                      <ul>
+                        {ch.items.map((it, idx) => {
+                          const active = it.id === activeId;
+                          return (
+                            <li key={it.id}>
+                              <Link
+                                to={itemPath(lab.id, tab, it.id)}
+                                onClick={onCloseDrawer}
+                                aria-current={active ? 'page' : undefined}
+                                className={cx(
+                                  'mx-2 flex gap-3 rounded-md px-2.5 py-2 text-sm transition-colors',
+                                  tab === 'problems' ? 'items-start' : 'items-center',
+                                  active ? 'bg-brand-muted font-medium text-ink' : 'text-ink hover:bg-hover',
+                                )}
+                              >
+                                {isComplete(it.id) ? (
+                                  <span aria-label="completed" className="grid size-5 shrink-0 place-items-center rounded-full bg-ok-bg text-[0.625rem] font-bold text-ok">✓</span>
+                                ) : tab === 'problems' && it.difficulty ? (
+                                  <span aria-label={it.difficulty} className={cx('mt-1.5 size-1.5 shrink-0 self-start rounded-full', DOT[it.difficulty])} />
+                                ) : (
+                                  <span
+                                    data-badge
+                                    className={cx(
+                                      'grid size-5 shrink-0 place-items-center rounded-full font-mono text-[0.625rem]',
+                                      active ? 'bg-brand text-white' : 'bg-subtle text-muted',
+                                    )}
+                                  >
+                                    {start + idx + 1}
+                                  </span>
+                                )}
+                                <span className={cx('min-w-0 flex-1', tab === 'problems' ? 'leading-snug' : 'truncate')}>{it.title}</span>
+                                {it.steps && <span aria-label="has animation" className="text-[0.5rem] text-brand">▶</span>}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </section>
+                </Fragment>
               );
             })}
             {lab.errors.length > 0 && <ContentErrors errors={lab.errors} />}

@@ -132,6 +132,12 @@ export interface Chapter {
   items: LessonItem[];
 }
 
+/** A named band of chapters ("Beginner", …) that starts at chapter `from` and runs until the next level. */
+export interface LabLevel {
+  title: string;
+  from: string;
+}
+
 export interface Lab {
   id: string;
   title: string;
@@ -140,6 +146,7 @@ export interface Lab {
   sidebarTitle?: string;
   sidebarSubtitle?: string;
   problemsSubtitle?: string;
+  levels?: LabLevel[];
   lessons: Chapter[];
   problems: Chapter[];
   datasets: Record<string, string>;

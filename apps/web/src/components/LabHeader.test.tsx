@@ -24,13 +24,21 @@ describe('LabHeader', () => {
     expect(screen.getByRole('tab', { name: 'LeetLab' })).toHaveAttribute('aria-selected', 'false');
     expect(screen.getByRole('button', { name: 'Reset DB' })).toBeInTheDocument();
   });
+
+  it('keeps "SQLab" only for "SQL Lab"; other labs read "<Name> Lab"', () => {
+    render(<MemoryRouter><LabHeader lab={{ ...lab, title: 'PostgreSQL Lab' }} tab="lessons" onOpenDrawer={() => {}} /></MemoryRouter>);
+    const name = screen.getByText('PostgreSQL');
+    expect(name).toHaveClass('text-brand');
+    expect(name.parentElement).toHaveTextContent(/^CodeAdda PostgreSQL Lab$/);
+  });
 });
 
 describe('Navbar', () => {
   it('lists upcoming labs as disabled', () => {
     render(<MemoryRouter><Navbar /></MemoryRouter>);
     expect(screen.getByRole('link', { name: 'SQL Lab' })).toBeInTheDocument();
-    for (const name of ['PostgreSQL', 'MongoDB', 'Redis']) {
+    expect(screen.getByRole('link', { name: 'PostgreSQL Lab' })).toBeInTheDocument();
+    for (const name of ['MongoDB', 'Redis']) {
       expect(screen.getByText(name).closest('[aria-disabled]')).toHaveAttribute('aria-disabled', 'true');
     }
   });

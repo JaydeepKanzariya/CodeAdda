@@ -60,7 +60,7 @@ describe('upcomingLabs', () => {
     expect(upcomingLabs(live)).toEqual(['MongoDB', 'Redis']);
   });
 
-  it('defaults to the real registry, where only SQL is live today', () => {
-    expect(upcomingLabs()).toEqual(['PostgreSQL', 'MongoDB', 'Redis']);
+  it('defaults to the real registry, where SQL and PostgreSQL are live', () => {
+    expect(upcomingLabs()).toEqual(['MongoDB', 'Redis']);
   });
 });

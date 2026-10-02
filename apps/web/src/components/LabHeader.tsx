@@ -3,11 +3,11 @@ import type { Tab } from '../lab/navigation';
 import { TextSizeMenu } from './TextSizeMenu';
 import { ModeTabs } from './ModeTabs';
 
-/** "SQL Lab" → "CodeAdda " + orange "SQL" + "ab" (the shared L reads as "SQLab"); other titles keep " Lab". */
+/** "SQL Lab" → "CodeAdda " + orange "SQL" + "ab" (reads as "SQLab"); any other title → "CodeAdda " + orange first word + rest. */
 function Wordmark({ title }: { title: string }) {
   const [head = '', ...rest] = title.split(' ');
   const tail = rest.join(' ');
-  const merged = tail === 'Lab' && head.endsWith('L');
+  const merged = head === 'SQL' && tail === 'Lab';
   return (
     <>
       CodeAdda <span className="text-brand">{head}</span>
