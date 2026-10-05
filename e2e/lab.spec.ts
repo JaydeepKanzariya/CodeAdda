@@ -338,3 +338,36 @@ test.describe('postgres lab', () => {
     await expect(labs.getByText('Coming soon')).toHaveCount(2);
   });
 });
+
+test.describe('lazy lab content', () => {
+  const contentRequests = (page: Page) => {
+    const urls: string[] = [];
+    page.on('request', (r) => { if (r.url().includes('lab-content/')) urls.push(r.url()); });
+    return urls;
+  };
+
+  test('the home page downloads no lab content', async ({ page }) => {
+    const urls = contentRequests(page);
+    await page.goto('/');
+    await expect(page.getByText('Correct!')).toBeVisible();
+    expect(urls).toEqual([]);
+  });
+
+  test('a deep link loads only that lab, and switching labs loads the other one', async ({ page }) => {
+    const urls = contentRequests(page);
+    await page.goto('/postgres/lessons/reading-values');
+    await expect(page.getByRole('heading', { level: 1, name: 'Reading JSONB values' })).toBeVisible();
+    expect(urls.some((u) => u.includes('lab-content/postgres'))).toBe(true);
+    expect(urls.some((u) => u.includes('lab-content/sql'))).toBe(false);
+    await page.getByRole('navigation', { name: 'Labs' }).getByRole('link', { name: 'SQL Lab', exact: true }).click();
+    await expect(page.getByRole('heading', { level: 1, name: 'SELECT All Columns' })).toBeVisible();
+    expect(urls.some((u) => u.includes('lab-content/sql'))).toBe(true);
+  });
+
+  test('an unknown lab shows the 404 page without loading content', async ({ page }) => {
+    const urls = contentRequests(page);
+    await page.goto('/nope');
+    await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible();
+    expect(urls).toEqual([]);
+  });
+});

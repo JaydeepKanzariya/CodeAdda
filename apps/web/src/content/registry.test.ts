@@ -1,66 +1,45 @@
-import { describe, expect, it } from 'vitest';
-import { buildRegistry, getLab, labs, UPCOMING_LABS, upcomingLabs } from './registry';
+import { describe, expect, it, vi } from 'vitest';
+import { UPCOMING_LABS, labSummaries, loadLab, sortByLabOrder, upcomingLabs } from './registry';
 
-const lesson = `---
-id: a
-title: A
-chapter: One
-order: 1
-dataset: d
----
-
-## Task
-Do it.
-
-## Solution
-\`\`\`sql
-SELECT 1;
-\`\`\`
-`;
-const labJson = (id: string) => JSON.stringify({ id, title: id, subtitle: '', language: 'sql', chapters: ['One'] });
-
-describe('buildRegistry', () => {
-  it('groups files by lab folder and orders labs sql → postgres → others', () => {
-    const result = buildRegistry(
-      {
-        '../../../../content/zeta/lab.json': labJson('zeta'),
-        '../../../../content/postgres/lab.json': labJson('postgres'),
-        '../../../../content/sql/lab.json': labJson('sql'),
-      },
-      {
-        '../../../../content/sql/datasets/d.sql': 'CREATE TABLE t (n int);',
-        '../../../../content/sql/lessons/01/01.md': lesson,
-      },
-    );
-    expect(result.map((l) => l.id)).toEqual(['sql', 'postgres', 'zeta']);
-    expect(result[0]!.lessons[0]!.items[0]!.id).toBe('a');
-    expect(result[0]!.datasets).toEqual({ d: 'CREATE TABLE t (n int);' });
+describe('registry', () => {
+  it('lists both live labs as summaries, SQL first', () => {
+    expect(labSummaries.map((s) => s.id)).toEqual(['sql', 'postgres']);
+    expect(labSummaries[0]).toMatchObject({ title: 'SQL Lab', lessons: 62, problems: 8 });
   });
 
-  it('skips a lab whose lab.json is invalid', () => {
-    expect(buildRegistry({ '../../../../content/bad/lab.json': '{}' }, {})).toEqual([]);
+  it('orders sql → postgres → mongodb → redis → others alphabetically', () => {
+    const ids = ['zeta', 'redis', 'alpha', 'postgres', 'sql'].map((id) => ({ id }));
+    expect(sortByLabOrder(ids).map((x) => x.id)).toEqual(['sql', 'postgres', 'redis', 'alpha', 'zeta']);
   });
-});
 
-describe('real content', () => {
-  it('loads the SQL lab from content/', () => {
-    expect(labs[0]?.id).toBe('sql');
-    expect(getLab('sql')?.lessons[0]?.title).toBe('Querying Data');
-    expect(getLab('sql')?.errors).toEqual([]);
+  it('loads one full lab on demand, caches it, and returns undefined for an unknown id', async () => {
+    const pg = await loadLab('postgres');
+    expect(pg?.lessons.flatMap((c) => c.items)).toHaveLength(46);
+    expect(await loadLab('postgres')).toBe(pg);
+    expect(await loadLab('nope')).toBeUndefined();
+    expect(await loadLab('constructor')).toBeUndefined();
+    expect(await loadLab('toString')).toBeUndefined();
+  });
+
+  it('keeps a failed load failed, so the error boundary sees the same rejection', async () => {
+    vi.resetModules();
+    const loader = vi.fn(() => Promise.reject(new Error('chunk failed')));
+    vi.doMock('virtual:lab-content', () => ({ labLoaders: { broken: loader } }));
+    try {
+      const fresh = await import('./registry');
+      const first = fresh.loadLab('broken');
+      await expect(first).rejects.toThrow('chunk failed');
+      expect(fresh.loadLab('broken')).toBe(first);
+      expect(loader).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.doUnmock('virtual:lab-content');
+      vi.resetModules();
+    }
   });
 });
 
 describe('upcomingLabs', () => {
-  it('lists every upcoming name when none is live', () => {
-    expect(upcomingLabs([])).toEqual([...UPCOMING_LABS]);
-  });
-
-  it('drops names that are live (a registry lab whose title starts with the name)', () => {
-    const live = [{ id: 'postgres', title: 'PostgreSQL Lab' }] as unknown as Parameters<typeof upcomingLabs>[0];
-    expect(upcomingLabs(live)).toEqual(['MongoDB', 'Redis']);
-  });
-
-  it('defaults to the real registry, where SQL and PostgreSQL are live', () => {
-    expect(upcomingLabs()).toEqual(['MongoDB', 'Redis']);
-  });
+  it('lists every upcoming name when none is live', () => expect(upcomingLabs([])).toEqual([...UPCOMING_LABS]));
+  it('drops names that are live', () => expect(upcomingLabs([{ title: 'PostgreSQL Lab' }])).toEqual(['MongoDB', 'Redis']));
+  it('defaults to the real labs, where SQL and PostgreSQL are live', () => expect(upcomingLabs()).toEqual(['MongoDB', 'Redis']));
 });

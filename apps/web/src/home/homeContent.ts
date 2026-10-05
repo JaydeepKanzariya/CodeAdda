@@ -1,6 +1,6 @@
-import type { Lab } from '@codeadda/core';
+import type { LabSummary } from '@codeadda/core';
 import type { UpcomingLab } from '../content/registry';
-import { flatItems, itemPath } from '../lab/navigation';
+import { itemPath } from '../lab/navigation';
 import type { IconName } from './icons';
 
 // Pure data and helpers for the home page. No React, and only a type-only import from the registry (erased at build time), so node tests can load it.
@@ -16,17 +16,15 @@ export interface LabStats {
   firstProblem?: string;
 }
 
-export function labStats(lab: Lab): LabStats {
-  const lessons = flatItems(lab, 'lessons');
-  const problems = flatItems(lab, 'problems');
+export function labStats(s: LabSummary): LabStats {
   return {
-    chapters: lab.lessons.length,
-    lessons: lessons.length,
-    problems: problems.length,
-    animated: lessons.filter((i) => i.steps).length,
-    total: lessons.length + problems.length,
-    firstLesson: lessons[0] ? itemPath(lab.id, 'lessons', lessons[0].id) : undefined,
-    firstProblem: problems[0] ? itemPath(lab.id, 'problems', problems[0].id) : undefined,
+    chapters: s.chapters,
+    lessons: s.lessons,
+    problems: s.problems,
+    animated: s.animated,
+    total: s.lessons + s.problems,
+    firstLesson: s.firstLessonId ? itemPath(s.id, 'lessons', s.firstLessonId) : undefined,
+    firstProblem: s.firstProblemId ? itemPath(s.id, 'problems', s.firstProblemId) : undefined,
   };
 }
 
@@ -130,7 +128,7 @@ export function labsLead(liveNames: string[], soon: number): string {
 }
 
 /** Hero pill: unchanged wording with one lab, a count of labs and exercises with more. */
-export function heroPill(labs: Lab[]): string {
+export function heroPill(labs: LabSummary[]): string {
   if (labs.length === 0) return 'Labs opening soon';
   const total = labs.reduce((n, l) => n + labStats(l).total, 0);
   if (labs.length === 1) return `${labs[0]!.title.replace(/\s+Lab$/, '')} lab now open · ${total} exercises`;

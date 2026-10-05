@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
-import type { Lab } from '@codeadda/core';
+import type { LabSummary } from '@codeadda/core';
 import { LogoMark } from '../components/Logo';
-import { labs, upcomingLabs } from '../content/registry';
+import { labSummaries, upcomingLabs } from '../content/registry';
 import { cx } from '../lib/cx';
 import { useProgress } from '../state/progress';
 import { HeroDemo } from './HeroDemo';
@@ -19,7 +19,7 @@ const FOOT_LINK = 'text-sm text-muted transition-colors hover:text-ink';
 
 export function HomePage() {
   // The hero, CTA banner and footer "Start here" follow the first registry lab (SQL today).
-  const stats = labs[0] ? labStats(labs[0]) : undefined;
+  const stats = labSummaries[0] ? labStats(labSummaries[0]) : undefined;
   return (
     <>
       <main id="main">
@@ -55,7 +55,7 @@ function Hero({ stats }: { stats?: LabStats }) {
         <div className="motion-safe:animate-rise">
           <p className="mb-5.5 inline-flex h-7 items-center gap-2 rounded-full border border-line bg-surface pr-3 pl-2.5 text-xs font-medium text-muted">
             <span aria-hidden="true" className="size-1.75 rounded-full bg-ok shadow-[0_0_0_3px_var(--color-success-bg)]" />
-            {heroPill(labs)}
+            {heroPill(labSummaries)}
           </p>
           <h1 id="hero-title" className="mb-5.5 text-[clamp(2.5rem,5.2vw,4rem)] font-bold leading-[1.02] tracking-[-0.035em] text-ink">
             Pull up a chair,
@@ -101,7 +101,7 @@ function Stat({ n, label }: { n: number; label: string }) {
   );
 }
 
-const shortName = (l: Lab) => l.title.replace(/\s+Lab$/, '');
+const shortName = (l: LabSummary) => l.title.replace(/\s+Lab$/, '');
 const CARD = 'flex h-full flex-col gap-3 rounded-xl border border-line p-5.5';
 
 function LabsSection() {
@@ -113,11 +113,11 @@ function LabsSection() {
         <SectionHead
           id="labs-title"
           kicker="The labs"
-          title={labsHeadline(labs.length, soon.length)}
-          lead={labsLead(labs.map(shortName), soon.length)}
+          title={labsHeadline(labSummaries.length, soon.length)}
+          lead={labsLead(labSummaries.map(shortName), soon.length)}
         />
         <ul className="m-0 grid list-none gap-3.5 p-0 sm:grid-cols-2 lg:grid-cols-4">
-          {labs.map((lab) => {
+          {labSummaries.map((lab) => {
             const stats = labStats(lab);
             return (
             <li key={lab.id} data-testid="live-lab-card">
@@ -284,7 +284,7 @@ function SiteFooter({ stats }: { stats?: LabStats }) {
           <p className="mt-4 text-xs text-muted">© {new Date().getFullYear()} CodeAdda</p>
         </div>
         <FooterColumn title="Labs">
-          {labs.map((lab) => (
+          {labSummaries.map((lab) => (
             <li key={lab.id}>
               <Link to={`/${lab.id}`} className={FOOT_LINK}>
                 {lab.title}

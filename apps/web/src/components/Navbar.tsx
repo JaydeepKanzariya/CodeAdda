@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router';
-import { labs, upcomingLabs } from '../content/registry';
+import { labSummaries, upcomingLabs } from '../content/registry';
 import { cx } from '../lib/cx';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
@@ -25,7 +25,7 @@ export function Navbar() {
           <Logo />
         </Link>
         <div ref={strip} data-testid="lab-links" className="no-scrollbar mx-auto flex min-w-0 items-center gap-1 overflow-x-auto max-md:fade-end max-md:pr-6">
-          {labs.map((lab) => (
+          {labSummaries.map((lab) => (
             <NavLink
               key={lab.id}
               to={`/${lab.id}`}

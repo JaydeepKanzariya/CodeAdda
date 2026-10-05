@@ -68,3 +68,5 @@ order; `state` runs `checkQuery` after your query and after the solution and com
 - `packages/engine-pglite` — PostgreSQL (PGlite) engine
 - `content/` — labs, lessons, problems and datasets
 - `docs/superpowers/` — design spec and implementation plans
+
+Lab content is bundled per lab and loaded when the lab is opened; the home page only gets a small summary of each lab. The entry bundle stays small because each lab is prebuilt to plain data at build time (the content parser never ships to the browser); check `index-*.js` in `npm run build -w @codeadda/web` after content-pipeline changes.
