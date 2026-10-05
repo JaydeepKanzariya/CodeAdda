@@ -152,3 +152,20 @@ export interface Lab {
   datasets: Record<string, string>;
   errors: ContentError[];
 }
+
+/** The few facts the home page, navbar and 404 page need about a lab, without its lessons. */
+export interface LabSummary {
+  id: string;
+  /** Folder name under content/ (normally equal to id). */
+  dir: string;
+  title: string;
+  subtitle: string;
+  language: LabLanguage;
+  chapters: number;
+  lessons: number;
+  problems: number;
+  /** Lessons with a "Watch it happen" script. */
+  animated: number;
+  firstLessonId?: string;
+  firstProblemId?: string;
+}

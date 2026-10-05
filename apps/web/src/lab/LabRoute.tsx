@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { Navigate, useParams } from 'react-router';
 import type { Lab, LessonItem } from '@codeadda/core';
-import { getLab } from '../content/registry';
+import { labSummaries, loadLab } from '../content/registry';
 import { LabHeader } from '../components/LabHeader';
 import { NotFound } from '../components/NotFound';
 import { PageLoader } from '../components/PageLoader';
@@ -16,8 +16,15 @@ import { useFirstLoad } from './useFirstLoad';
 import { useLabEngine } from './useLabEngine';
 
 export function LabRoute() {
-  const { labId = '', tab, itemId } = useParams();
-  const lab = getLab(labId);
+  const { labId = '' } = useParams();
+  // Unknown ids never trigger a download.
+  if (!labSummaries.some((s) => s.id === labId)) return <NotFound />;
+  return <LoadedLab labId={labId} />;
+}
+
+function LoadedLab({ labId }: { labId: string }) {
+  const { tab, itemId } = useParams();
+  const lab = use(loadLab(labId)); // suspends until the lab's chunk arrives (fallback in App.tsx)
   if (!lab) return <NotFound />;
 
   const t: Tab = tab === 'problems' && lab.problems.length > 0 ? 'problems' : 'lessons';

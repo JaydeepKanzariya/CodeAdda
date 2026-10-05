@@ -2,8 +2,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import type { Lab } from '@codeadda/core';
-import { getLab, labs, upcomingLabs } from '../content/registry';
+import type { LabSummary } from '@codeadda/core';
+import { labSummaries, upcomingLabs } from '../content/registry';
 import { progressStore } from '../state/progress';
 import { heroPill, labStats } from './homeContent';
 import { HomePage } from './HomePage';
@@ -23,12 +23,12 @@ describe('HomePage', () => {
 
   it('shows numbers computed from the registry, not literals', () => {
     renderHome();
-    const stats = labStats(getLab('sql')!);
+    const stats = labStats(labSummaries[0]!);
     const value = (label: string) => screen.getByText(label).nextElementSibling!.textContent;
     expect(value('SQL lessons')).toBe(String(stats.lessons));
     expect(value('practice problems')).toBe(String(stats.problems));
     expect(value('animated walkthroughs')).toBe(String(stats.animated));
-    expect(screen.getByText(heroPill(labs))).toBeInTheDocument();
+    expect(screen.getByText(heroPill(labSummaries))).toBeInTheDocument();
     expect(within(labsRegion()).getByText(`${stats.chapters} chapters · ${stats.total} exercises`)).toBeInTheDocument();
     expect(screen.getByText(new RegExp(`^${stats.animated} lessons animate`))).toBeInTheDocument();
   });
@@ -36,7 +36,7 @@ describe('HomePage', () => {
   it('renders the upcoming labs as non-clickable coming-soon cards', () => {
     renderHome();
     const region = labsRegion();
-    expect(within(region).getAllByRole('listitem')).toHaveLength(labs.length + upcomingLabs().length);
+    expect(within(region).getAllByRole('listitem')).toHaveLength(labSummaries.length + upcomingLabs().length);
     expect(within(region).getAllByText('Coming soon')).toHaveLength(upcomingLabs().length);
     for (const name of upcomingLabs()) {
       const card = within(region).getByText(name).closest('[data-testid="coming-soon-card"]')!;
@@ -48,7 +48,7 @@ describe('HomePage', () => {
 
   it('renders the steps, features, CTA and footer with real targets', () => {
     renderHome();
-    const stats = labStats(getLab('sql')!);
+    const stats = labStats(labSummaries[0]!);
     expect(screen.getByRole('heading', { name: 'Read, run, check, repeat' })).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 3, name: /Pick a lesson|Run your query|Get a verdict/ })).toHaveLength(3);
     expect(screen.getByRole('heading', { name: 'Built so practice turns into habit.' })).toBeInTheDocument();
@@ -72,7 +72,7 @@ describe('HomePage', () => {
 
   it('says Open before any progress and Continue after a completed lesson', () => {
     const { unmount } = renderHome();
-    expect(within(labsRegion()).getAllByText('Open')).toHaveLength(labs.length);
+    expect(within(labsRegion()).getAllByText('Open')).toHaveLength(labSummaries.length);
     unmount();
     progressStore.markComplete('sql', 'select-all');
     renderHome();
@@ -83,7 +83,7 @@ describe('HomePage', () => {
     vi.resetModules();
     vi.doMock('../content/registry', async () => {
       const real = await vi.importActual<typeof import('../content/registry')>('../content/registry');
-      return { ...real, labs: [], getLab: () => undefined, upcomingLabs: () => [...real.UPCOMING_LABS] };
+      return { ...real, labSummaries: [], upcomingLabs: () => [...real.UPCOMING_LABS] };
     });
     try {
       const { HomePage: Empty } = await import('./HomePage');
@@ -105,12 +105,12 @@ describe('HomePage', () => {
     vi.resetModules();
     vi.doMock('../content/registry', async () => {
       const real = await vi.importActual<typeof import('../content/registry')>('../content/registry');
-      const sql = real.labs[0]!;
-      const pg: Lab = {
-        id: 'postgres', title: 'PostgreSQL Lab', subtitle: 'The Postgres extras', language: 'sql', datasets: {}, errors: [],
-        lessons: [{ title: 'A', items: [{ ...sql.lessons[0]!.items[0]! }] }], problems: [],
+      const sql = real.labSummaries[0]!;
+      const pg: LabSummary = {
+        id: 'postgres', dir: 'postgres', title: 'PostgreSQL Lab', subtitle: 'The Postgres extras', language: 'sql',
+        chapters: 1, lessons: 1, problems: 0, animated: 0,
       };
-      return { ...real, labs: [sql, pg], getLab: real.getLab, upcomingLabs: () => ['MongoDB', 'Redis'] };
+      return { ...real, labSummaries: [sql, pg], upcomingLabs: () => ['MongoDB', 'Redis'] };
     });
     try {
       const { HomePage: Two } = await import('./HomePage');
