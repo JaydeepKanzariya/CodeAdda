@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { listLabDirs, loadLabFromDir } from '@codeadda/content-loader/node';
-import { PgliteEngine } from '@codeadda/engine-pglite';
 import { checkLab } from './checkLab';
+import { engineFor } from './engines';
 
 const contentRoot = resolve(import.meta.dirname, '../content');
 let failed = 0;
@@ -15,11 +15,11 @@ for (const dir of listLabDirs(contentRoot)) {
     failed++;
     continue;
   }
-  if (lab.language !== 'sql') {
+  const engine = engineFor(lab.language);
+  if (!engine) {
     console.log(`- ${lab.id}: skipped (no ${lab.language} engine yet)`);
     continue;
   }
-  const engine = new PgliteEngine();
   const { checked, failures } = await checkLab(lab, engine);
   await engine.dispose();
   for (const f of failures) console.error(`✗ content/${lab.id}/${f.path} — ${f.message}`);
@@ -28,3 +28,4 @@ for (const dir of listLabDirs(contentRoot)) {
 }
 
 process.exitCode = failed ? 1 : 0;
+

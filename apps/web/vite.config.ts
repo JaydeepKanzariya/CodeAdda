@@ -22,8 +22,14 @@ function stripMonacoCdnDefault(): Plugin {
 export default defineConfig({
   plugins: [stripMonacoCdnDefault(), labContent(), react(), tailwindcss()],
   // PGlite ships its own WASM; pre-bundling breaks its asset URLs.
-  optimizeDeps: { exclude: ['@electric-sql/pglite'] },
+  // mingo is only imported by the MongoDB worker, which the dep scanner doesn't crawl; without this, the first
+  // visit to a lab discovers it late and Vite re-optimizes and reloads the page.
+  optimizeDeps: { exclude: ['@electric-sql/pglite'], include: ['mingo', 'mingo/updater'] },
   worker: { format: 'es' },
-  // content/ lives two levels above apps/web.
-  server: { fs: { allow: ['../..'] } },
+  server: {
+    // content/ lives two levels above apps/web.
+    fs: { allow: ['../..'] },
+    // Compile the lazy lab screen and the engine workers at startup, so the first lab visit on a fresh server is fast.
+    warmup: { clientFiles: ['./src/lab/LabRoute.tsx', './src/engine/*.worker.ts'] },
+  },
 });

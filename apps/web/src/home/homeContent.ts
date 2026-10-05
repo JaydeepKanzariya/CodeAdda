@@ -82,7 +82,7 @@ export interface Step {
 
 export const STEPS: Step[] = [
   { title: 'Pick a lesson', body: 'Each lesson explains one idea in a few short paragraphs, then hands you a task that puts it to work.' },
-  { title: 'Run your query', body: 'Write SQL in the editor and press Run. A Postgres database living in your browser returns real rows.' },
+  { title: 'Run your query', body: 'Write a query in the editor and press Run. The database runs inside your browser and returns real results.' },
   { title: 'Get a verdict', body: 'CodeAdda compares your result with the expected one and, when they differ, shows you exactly which rows.' },
 ];
 
@@ -98,7 +98,7 @@ function animates(n: number): string {
 }
 
 export const FEATURES: Feature[] = [
-  { icon: 'chip', title: 'No server, no setup', body: () => 'Postgres runs inside the page itself. No install, no account, and your queries never leave your machine.' },
+  { icon: 'chip', title: 'No server, no setup', body: () => 'Every database runs inside the page itself. No install, no account, and your queries never leave your machine.' },
   { icon: 'check-circle', title: 'Graded on results', body: () => 'Your rows are compared with the expected rows, not the text you typed, so any correct query passes.' },
   { icon: 'eye', title: 'Watch it happen', body: (s) => `${animates(s?.animated ?? 0)} what a clause does, step by step, before you try it yourself.` },
   { icon: 'bookmark', title: 'Your place, saved', body: () => 'Progress and drafts stay in this browser, so you can close the tab and pick up later.' },
@@ -108,6 +108,7 @@ export const FEATURES: Feature[] = [
 export const LIVE_DESCRIPTIONS: Record<string, string> = {
   sql: 'From your first SELECT to joins, CTEs and window functions, all on one realistic shop database.',
   postgres: 'From your first table to JSONB, window functions and indexes, all on a food-delivery database.',
+  mongodb: 'From your first document to aggregation pipelines and joins, all on a streaming-service database.',
 };
 export const LIVE_DESCRIPTION_FALLBACK = 'Short lessons, a live database and an instant check, all inside your browser.';
 

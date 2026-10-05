@@ -9,7 +9,7 @@ import { heroPill, labStats } from './homeContent';
 import { HomePage } from './HomePage';
 
 const renderHome = () => render(<MemoryRouter><HomePage /></MemoryRouter>);
-const labsRegion = () => screen.getByRole('region', { name: 'Two labs are open. Two more are cooking.' });
+const labsRegion = () => screen.getByRole('region', { name: 'Three labs are open. One more is cooking.' });
 
 describe('HomePage', () => {
   it('has one h1, the primary link and the SQL card both pointing at /sql', () => {
@@ -43,7 +43,8 @@ describe('HomePage', () => {
       expect(card).not.toBeNull();
       expect(card.querySelector('a, button')).toBeNull();
     }
-    expect(screen.queryByRole('link', { name: /MongoDB/ })).toBeNull();
+    expect(within(region).getByRole('link', { name: /MongoDB/ })).toHaveAttribute('href', '/mongodb');
+    expect(screen.queryByRole('link', { name: /Redis/ })).toBeNull();
   });
 
   it('renders the steps, features, CTA and footer with real targets', () => {

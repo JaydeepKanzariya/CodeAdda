@@ -2,11 +2,21 @@ import type { QuerySuccess } from './types';
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
 
+/** Objects compare by content, not key order (MongoDB/JSON semantics). Array order still matters. */
+function sortKeys(v: unknown): unknown {
+  if (Array.isArray(v)) return v.map(sortKeys);
+  if (v !== null && typeof v === 'object' && !(v instanceof Date)) {
+    const o = v as Record<string, unknown>;
+    return Object.fromEntries(Object.keys(o).sort().map((k) => [k, sortKeys(o[k])]));
+  }
+  return v;
+}
+
 export function normalizeCell(v: unknown): unknown {
   if (typeof v === 'bigint') return Number(v);
   if (typeof v === 'string' && NUMERIC.test(v.trim())) return Number(v);
   if (v instanceof Date) return v.toISOString();
-  if (v !== null && typeof v === 'object') return JSON.stringify(v);
+  if (v !== null && typeof v === 'object') return JSON.stringify(sortKeys(v));
   return v;
 }
 

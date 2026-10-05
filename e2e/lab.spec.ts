@@ -238,9 +238,9 @@ test.describe('home page', () => {
   test('renders every band and leads into the first lesson, offline', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Pull up a chair');
-    const labs = page.getByRole('region', { name: 'Two labs are open. Two more are cooking.' });
+    const labs = page.getByRole('region', { name: 'Three labs are open. One more is cooking.' });
     await expect(labs.getByRole('listitem')).toHaveCount(4);
-    await expect(page.getByRole('link', { name: /MongoDB/ })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /Redis/ })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Read, run, check, repeat' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Built so practice turns into habit.' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'The database is already running.' })).toBeVisible();
@@ -333,9 +333,9 @@ test.describe('postgres lab', () => {
     const chapters = page.getByRole('navigation', { name: 'Chapters' });
     await expect(chapters.getByRole('heading', { level: 3 })).toHaveText(['Beginner', 'Intermediate', 'Advanced']);
     await page.goto('/');
-    const labs = page.getByRole('region', { name: 'Two labs are open. Two more are cooking.' });
+    const labs = page.getByRole('region', { name: 'Three labs are open. One more is cooking.' });
     await expect(labs.getByRole('link', { name: /PostgreSQL/ })).toHaveAttribute('href', '/postgres');
-    await expect(labs.getByText('Coming soon')).toHaveCount(2);
+    await expect(labs.getByText('Coming soon')).toHaveCount(1);
   });
 });
 
@@ -368,6 +368,74 @@ test.describe('lazy lab content', () => {
     const urls = contentRequests(page);
     await page.goto('/nope');
     await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible();
+    expect(urls).toEqual([]);
+  });
+});
+
+test.describe('mongodb lab', () => {
+  test('the first lesson solves, and the editor title reads MongoDB shell', async ({ page }) => {
+    await page.goto('/mongodb');
+    await expect(page.getByRole('heading', { level: 1, name: 'Your first find' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'MongoDB shell' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Run Query' })).toBeEnabled();
+    await page.getByRole('button', { name: /Solution/ }).click();
+    await page.getByRole('button', { name: 'Load into editor' }).click();
+    await page.getByRole('button', { name: 'Run Query' }).click();
+    await expect(page.getByText('Correct!')).toBeVisible();
+  });
+
+  test('skip banner jumps to Intermediate without a reload', async ({ page }) => {
+    await page.goto('/mongodb');
+    await expect(page.getByRole('heading', { level: 1, name: 'Your first find' })).toBeVisible();
+    await page.evaluate(() => ((window as unknown as { __noReload: boolean }).__noReload = true));
+    await page.getByRole('link', { name: 'Skip to Intermediate →' }).click();
+    await expect(page).toHaveURL(/\/mongodb\/lessons\/or-and$/);
+    await expect(page.getByRole('heading', { level: 1, name: 'Combining conditions with $or and $and' })).toBeVisible();
+    expect(await page.evaluate(() => (window as unknown as { __noReload?: boolean }).__noReload)).toBe(true);
+  });
+
+  test('results toggle switches between Table and Documents view', async ({ page }) => {
+    await page.goto('/mongodb');
+    await page.getByRole('button', { name: /Solution/ }).click();
+    await page.getByRole('button', { name: 'Load into editor' }).click();
+    await page.getByRole('button', { name: 'Run Query' }).click();
+    await expect(page.getByText('Correct!')).toBeVisible();
+
+    const resultsPanel = page.locator('.fs-results');
+    const viewToggle = page.getByRole('radiogroup', { name: 'Results view' });
+    await expect(viewToggle).toBeVisible();
+    await viewToggle.getByRole('radio', { name: 'Documents' }).click();
+    await expect(resultsPanel.locator('pre').first()).toContainText('_id');
+    await viewToggle.getByRole('radio', { name: 'Table' }).click();
+    await expect(resultsPanel.getByRole('table')).toBeVisible();
+  });
+
+  test('schema panel displays collections and View sample data shows 3 documents', async ({ page }) => {
+    await page.goto('/mongodb');
+    await page.getByRole('tab', { name: 'Database Schema' }).click();
+    await expect(page.getByRole('button', { name: /^movies/ }).first()).toBeVisible();
+    await page.getByRole('button', { name: /^movies/ }).first().click();
+    await page.getByRole('button', { name: 'View sample data' }).click();
+    await expect(page.getByRole('tab', { name: 'Query Results' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByText(/3 documents/)).toBeVisible();
+  });
+
+  test('a $lookup lesson solves end to end', async ({ page }) => {
+    await page.goto('/mongodb/lessons/lookup');
+    await expect(page.getByRole('button', { name: 'Run Query' })).toBeEnabled();
+    await page.getByRole('button', { name: /Solution/ }).click();
+    await page.getByRole('button', { name: 'Load into editor' }).click();
+    await page.getByRole('button', { name: 'Run Query' }).click();
+    await expect(page.getByText('Correct!')).toBeVisible();
+  });
+
+  test('home page links to MongoDB, has one coming soon (Redis), and does not load lab content', async ({ page }) => {
+    const urls: string[] = [];
+    page.on('request', (r) => { if (r.url().includes('lab-content/')) urls.push(r.url()); });
+    await page.goto('/');
+    const labs = page.getByRole('region', { name: 'Three labs are open. One more is cooking.' });
+    await expect(labs.getByRole('link', { name: /MongoDB/ })).toHaveAttribute('href', '/mongodb');
+    await expect(labs.getByText('Coming soon')).toHaveCount(1);
     expect(urls).toEqual([]);
   });
 });

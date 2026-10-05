@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ResultsPanel } from './ResultsPanel';
 
 describe('ResultsPanel', () => {
@@ -30,5 +31,55 @@ describe('ResultsPanel', () => {
   it('renders notices', () => {
     render(<ResultsPanel running={false} result={{ ok: true, columns: [], rows: [], rowCount: 0, durationMs: 1, notice: 'Query OK. 1 row(s) affected.' }} />);
     expect(screen.getByRole('status')).toHaveTextContent('Query OK. 1 row(s) affected.');
+  });
+
+  it('renders a Results view toggle when documents exist, toggles between table and documents view', async () => {
+    const user = userEvent.setup();
+    const doc1 = { _id: 1, title: 'Film A' };
+    const doc2 = { _id: 2, title: 'Film B' };
+    render(
+      <ResultsPanel
+        running={false}
+        result={{
+          ok: true,
+          columns: ['_id', 'title'],
+          rows: [[1, 'Film A'], [2, 'Film B']],
+          rowCount: 2,
+          durationMs: 4,
+          documents: [doc1, doc2],
+        }}
+      />,
+    );
+
+    const group = screen.getByRole('radiogroup', { name: 'Results view' });
+    expect(group).toBeInTheDocument();
+    const tableBtn = screen.getByRole('radio', { name: 'Table' });
+    const docsBtn = screen.getByRole('radio', { name: 'Documents' });
+    expect(tableBtn).toBeChecked();
+    expect(docsBtn).not.toBeChecked();
+
+    expect(screen.getAllByRole('row')).toHaveLength(3);
+
+    await user.click(docsBtn);
+    expect(docsBtn).toBeChecked();
+    expect(tableBtn).not.toBeChecked();
+
+    expect(screen.queryAllByRole('row')).toHaveLength(0);
+    expect(screen.getByText(JSON.stringify(doc1, null, 2), { collapseWhitespace: false })).toBeInTheDocument();
+    expect(screen.getByText(JSON.stringify(doc2, null, 2), { collapseWhitespace: false })).toBeInTheDocument();
+
+    await user.click(tableBtn);
+    expect(tableBtn).toBeChecked();
+    expect(screen.getAllByRole('row')).toHaveLength(3);
+  });
+
+  it('shows no view toggle when documents are not present', () => {
+    render(
+      <ResultsPanel
+        running={false}
+        result={{ ok: true, columns: ['id'], rows: [[1]], rowCount: 1, durationMs: 2 }}
+      />,
+    );
+    expect(screen.queryByRole('radiogroup', { name: 'Results view' })).toBeNull();
   });
 });

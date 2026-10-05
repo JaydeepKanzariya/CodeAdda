@@ -1,0 +1,13 @@
+{
+  "name": "@codeadda/engine-mongo-sim",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@codeadda/core": "*",
+    "mingo": "7.2.4"
+  }
+}

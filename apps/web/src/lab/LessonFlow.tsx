@@ -17,7 +17,8 @@ import { usePrefs } from '../state/prefs';
 import { progressStore } from '../state/progress';
 import { skipTarget, type Tab } from './navigation';
 import { useDraftSaver } from './useDraftSaver';
-import { STARTER_SQL, type LabEngine } from './useLabEngine';
+import { type LabEngine } from './useLabEngine';
+import { labUi } from './labUi';
 
 interface LessonFlowProps {
   lab: Lab;
@@ -29,7 +30,8 @@ interface LessonFlowProps {
 
 export function LessonFlow({ lab, tab, item, number, engine }: LessonFlowProps) {
   const prefs = usePrefs();
-  const [query, setQuery] = useState(() => progressStore.getDraft(lab.id, item.id) ?? STARTER_SQL);
+  const ui = labUi(lab.language);
+  const [query, setQuery] = useState(() => progressStore.getDraft(lab.id, item.id) ?? ui.starter);
   const [panel, setPanel] = useState<'results' | 'schema'>('results');
 
   useDraftSaver((q) => progressStore.saveDraft(lab.id, item.id, q), query, 400);
@@ -54,7 +56,7 @@ export function LessonFlow({ lab, tab, item, number, engine }: LessonFlowProps) 
 
       {skip && (
         <p className="fs-content max-w-[760px] rounded-md border border-note-line bg-note-bg px-4 py-2.5 text-sm text-note">
-          Already know SQL?{' '}
+          {ui.skipPrompt}{' '}
           <Link to={skip.path} className="font-semibold underline underline-offset-2">
             Skip to {skip.level} →
           </Link>
@@ -102,6 +104,8 @@ export function LessonFlow({ lab, tab, item, number, engine }: LessonFlowProps) 
             fontScale={prefs.textSizes.editor}
             theme={prefs.theme}
             statusText={engine.status === 'loading' ? 'Loading database…' : undefined}
+            language={ui.monaco}
+            title={ui.editorTitle}
           />
           <SolutionPanel solution={item.solution} onLoad={setQuery} />
           {engine.check && (
@@ -144,14 +148,14 @@ export function LessonFlow({ lab, tab, item, number, engine }: LessonFlowProps) 
                 </div>
               ) : (
                 <div className="fs-schema">
-                  <SchemaViewer schema={engine.schema} disabled={engine.running || engine.status !== 'ready'} onSample={sample} />
+                  <SchemaViewer schema={engine.schema} disabled={engine.running || engine.status !== 'ready'} onSample={sample} unit={ui.unit} language={lab.language} />
                 </div>
               )}
             </div>
           </div>
           <SchemaSection>
             <div className="fs-schema">
-              <SchemaViewer schema={engine.schema} disabled={engine.running || engine.status !== 'ready'} onSample={sample} />
+              <SchemaViewer schema={engine.schema} disabled={engine.running || engine.status !== 'ready'} onSample={sample} unit={ui.unit} language={lab.language} />
             </div>
           </SchemaSection>
         </div>

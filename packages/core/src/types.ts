@@ -8,6 +8,8 @@ export interface QuerySuccess {
   rowCount: number;
   durationMs: number;
   notice?: string;
+  /** Raw documents (MongoDB labs), for the Documents view. */
+  documents?: unknown[];
 }
 
 export interface QueryFailure {

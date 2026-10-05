@@ -77,3 +77,15 @@ describe('rowKey', () => {
     expect(rowKey(['1.0', 'x'])).toBe(rowKey([1, 'x']));
   });
 });
+
+describe('normalizeCell with nested objects', () => {
+  it('ignores key order inside objects and nested arrays of objects', () => {
+    expect(normalizeCell({ a: 1, b: { c: 2, d: 3 } })).toEqual(normalizeCell({ b: { d: 3, c: 2 }, a: 1 }));
+    expect(normalizeCell([{ x: 1, y: 2 }])).toEqual(normalizeCell([{ y: 2, x: 1 }]));
+  });
+  it('still tells different values apart', () => {
+    expect(normalizeCell({ a: 1 })).not.toEqual(normalizeCell({ a: 2 }));
+    expect(normalizeCell([1, 2])).not.toEqual(normalizeCell([2, 1]));
+  });
+});
+
