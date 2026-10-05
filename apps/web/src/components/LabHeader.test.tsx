@@ -38,7 +38,8 @@ describe('Navbar', () => {
     render(<MemoryRouter><Navbar /></MemoryRouter>);
     expect(screen.getByRole('link', { name: 'SQL Lab' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'PostgreSQL Lab' })).toBeInTheDocument();
-    for (const name of ['MongoDB', 'Redis']) {
+    expect(screen.getByRole('link', { name: 'MongoDB Lab' })).toBeInTheDocument();
+    for (const name of ['Redis']) {
       expect(screen.getByText(name).closest('[aria-disabled]')).toHaveAttribute('aria-disabled', 'true');
     }
   });

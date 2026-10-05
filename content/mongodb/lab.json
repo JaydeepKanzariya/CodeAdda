@@ -1,0 +1,36 @@
+{
+  "id": "mongodb",
+  "title": "MongoDB Lab",
+  "subtitle": "From your first document to queries, updates and aggregation",
+  "sidebarTitle": "The MongoDB Path",
+  "sidebarSubtitle": "Beginner to advanced, one document at a time",
+  "problemsSubtitle": "Practice problems on the Reelhouse streaming database",
+  "language": "mongodb",
+  "chapters": [
+    "Meet Documents",
+    "Projections & Limits",
+    "Comparison Operators",
+    "Inserting Data",
+    "Updating & Deleting",
+    "Complex Queries",
+    "Embedded Documents",
+    "Array Queries",
+    "Array Updates",
+    "Counting & Distinct",
+    "Aggregation Pipeline",
+    "Reshaping Arrays",
+    "Multi-Collection Lookups",
+    "Conditional Expressions",
+    "Reshaping Documents"
+  ],
+  "problemGroups": [
+    "Warm-up",
+    "Everyday MongoDB",
+    "Aggregation & Power"
+  ],
+  "levels": [
+    { "title": "Beginner", "from": "Meet Documents" },
+    { "title": "Intermediate", "from": "Complex Queries" },
+    { "title": "Advanced", "from": "Aggregation Pipeline" }
+  ]
+}

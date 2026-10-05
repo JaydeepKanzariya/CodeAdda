@@ -13,7 +13,8 @@ import { useIsDesktop } from '../lib/useIsDesktop';
 import { usePrefs } from '../state/prefs';
 import { progressStore } from '../state/progress';
 import { useDraftSaver } from './useDraftSaver';
-import { STARTER_SQL, type LabEngine } from './useLabEngine';
+import { type LabEngine } from './useLabEngine';
+import { labUi } from './labUi';
 
 type OutputTab = 'results' | 'schema';
 
@@ -85,7 +86,8 @@ interface Props {
 export function ProblemWorkspace({ lab, item, engine }: Props) {
   const prefs = usePrefs();
   const isDesktop = useIsDesktop();
-  const [query, setQuery] = useState(() => progressStore.getDraft(lab.id, item.id) ?? STARTER_SQL);
+  const ui = labUi(lab.language);
+  const [query, setQuery] = useState(() => progressStore.getDraft(lab.id, item.id) ?? ui.starter);
   const [panel, setPanel] = useState<OutputTab>('results');
 
   useDraftSaver((q) => progressStore.saveDraft(lab.id, item.id, q), query, 400);
@@ -105,6 +107,8 @@ export function ProblemWorkspace({ lab, item, engine }: Props) {
       disabled={engine.running || engine.status !== 'ready'}
       onSample={sample}
       placeholder={engine.status === 'idle' ? SCHEMA_PLACEHOLDER : engine.status === 'error' ? SCHEMA_ERROR : undefined}
+      unit={ui.unit}
+      language={lab.language}
       flush
     />
   );
@@ -127,6 +131,8 @@ export function ProblemWorkspace({ lab, item, engine }: Props) {
       fontScale={prefs.textSizes.editor}
       theme={prefs.theme}
       statusText={engine.status === 'loading' ? 'Loading database…' : undefined}
+      language={ui.monaco}
+      title={ui.editorTitle}
       height={height}
     />
   );

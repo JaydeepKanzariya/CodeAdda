@@ -4,6 +4,7 @@ import type { ContentError, Lab } from '@codeadda/core';
 import { cx } from '../lib/cx';
 import { useIsDesktop } from '../lib/useIsDesktop';
 import { chaptersFor, itemPath, levelStarts, type Tab } from '../lab/navigation';
+import { labUi } from '../lab/labUi';
 import { Chevron } from './Chevron';
 
 export interface SidebarProps {
@@ -59,7 +60,7 @@ export function Sidebar({ lab, tab, activeId, collapsed, drawerOpen, onCloseDraw
   const heading =
     tab === 'lessons'
       ? { title: lab.sidebarTitle ?? lab.title, subtitle: lab.sidebarSubtitle ?? lab.subtitle }
-      : { title: 'Challenges', subtitle: 'Original SQL challenges, easy to hard' };
+      : { title: 'Challenges', subtitle: labUi(lab.language).problemsSubtitle };
 
   let counter = 0;
 

@@ -1,0 +1,450 @@
+{
+  "_meta": {
+    "descriptions": {
+      "movies": "Feature films and documentaries streaming on Reelhouse",
+      "users": "Registered Reelhouse subscribers across free and paid subscription plans",
+      "reviews": "User ratings and written reviews for movies",
+      "watch_history": "Individual streaming sessions logged for subscribers"
+    }
+  },
+  "movies": [
+    {
+      "_id": 1,
+      "title": "The Obsidian Coast",
+      "year": 2018,
+      "runtime": 156,
+      "genres": ["Drama", "Mystery"],
+      "details": { "director": "Maren Holt", "country": "Norway", "language": "Norwegian" },
+      "cast": [
+        { "actor": "Elena Rostova", "role": "Detective Miller" },
+        { "actor": "Jonas Dahl", "role": "Lead Architect" }
+      ],
+      "ratings": { "critics": 91, "audience": 9.4 },
+      "tags": ["award-winner", "4k", "staff-pick"]
+    },
+    {
+      "_id": 2,
+      "title": "Neon Mirage",
+      "year": 2021,
+      "runtime": 88,
+      "genres": ["Comedy", "Sci-Fi"],
+      "details": { "director": "Kenji Sato", "country": "Japan", "language": "Japanese" },
+      "cast": [
+        { "actor": "Aoi Tanaka", "role": "Lead Programmer" },
+        { "actor": "Ren Mori", "role": "Android Courier" }
+      ],
+      "ratings": { "critics": 78, "audience": 8.1 },
+      "tags": ["indie", "staff-pick"]
+    },
+    {
+      "_id": 3,
+      "title": "Echoes of Orion",
+      "year": 2015,
+      "runtime": 142,
+      "genres": ["Action", "Adventure", "Sci-Fi"],
+      "details": { "director": "Amara Diop", "country": "France", "language": "French" },
+      "cast": [
+        { "actor": "Lucas Bernard", "role": "Lead Pilot" },
+        { "actor": "Fatou Camara", "role": "Flight Engineer" }
+      ],
+      "ratings": { "critics": 85, "audience": 9.0 },
+      "tags": ["4k", "blockbuster"]
+    },
+    {
+      "_id": 4,
+      "title": "Whispering Pines",
+      "year": 2000,
+      "runtime": 115,
+      "genres": ["Drama", "Romance"],
+      "details": { "director": "Sofia Morales", "country": "Spain", "language": "Spanish" },
+      "cast": [
+        { "actor": "Mateo Vega", "role": "Botanist" },
+        { "actor": "Isabella Cruz", "role": "Artist" }
+      ],
+      "ratings": { "audience": 7.6 }
+    },
+    {
+      "_id": 5,
+      "title": "Clockwork Dawn",
+      "year": 2012,
+      "runtime": 134,
+      "genres": ["Sci-Fi", "Thriller"],
+      "details": { "director": "Lukas Lindqvist", "country": "Sweden", "language": "Swedish" },
+      "cast": [
+        { "actor": "Astrid Lind", "role": "Watchmaker" },
+        { "actor": "Henrik Berg", "role": "Inspector Vance" }
+      ],
+      "ratings": { "critics": 82, "audience": 8.4 },
+      "tags": ["staff-pick"]
+    },
+    {
+      "_id": 6,
+      "title": "Sands of Kalari",
+      "year": 2004,
+      "runtime": 162,
+      "genres": ["Action", "Drama", "History"],
+      "details": { "director": "Ravi Kapoor", "country": "India", "language": "Hindi" },
+      "cast": [
+        { "actor": "Arjun Menon", "role": "Lead Warrior" },
+        { "actor": "Priya Nair", "role": "Royal Emissary" }
+      ],
+      "ratings": { "critics": 88, "audience": 8.7 },
+      "tags": ["epic", "award-winner"]
+    },
+    {
+      "_id": 7,
+      "title": "Cipher Protocol",
+      "year": 2019,
+      "runtime": 128,
+      "genres": ["Action", "Thriller"],
+      "details": { "director": "Maren Holt", "country": "United States", "language": "English" },
+      "cast": [
+        { "actor": "Elena Rostova", "role": "Cryptanalyst" },
+        { "actor": "David Chen", "role": "Detective Sergeant" }
+      ],
+      "ratings": { "critics": 93, "audience": 9.2 },
+      "tags": ["4k", "blockbuster"]
+    },
+    {
+      "_id": 8,
+      "title": "Velvet Shadow",
+      "year": 1998,
+      "runtime": 92,
+      "genres": ["Comedy", "Crime"],
+      "details": { "director": "Claire Beaumont", "country": "France", "language": "French" },
+      "cast": [
+        { "actor": "Julien Roy", "role": "Antique Dealer" },
+        { "actor": "Celine Moreau", "role": "Insurance Agent" }
+      ],
+      "ratings": { "critics": 74, "audience": 7.8 },
+      "tags": ["noir", "classic"]
+    },
+    {
+      "_id": 9,
+      "title": "Solaris Drift",
+      "year": 2022,
+      "runtime": 138,
+      "genres": ["Action", "Adventure"],
+      "details": { "director": "Amara Diop", "country": "Senegal", "language": "Wolof" },
+      "cast": [
+        { "actor": "Ibrahim Sy", "role": "Deep Sea Diver" },
+        { "actor": "Ndeye Fall", "role": "Lead Marine Biologist" }
+      ],
+      "ratings": { "critics": 89, "audience": 8.6 },
+      "tags": ["4k", "award-winner"]
+    },
+    {
+      "_id": 10,
+      "title": "The Last Cartographer",
+      "year": 2010,
+      "runtime": 118,
+      "genres": ["Adventure", "Drama"],
+      "details": { "director": "Jan Kowalski", "country": "Poland", "language": "Polish" },
+      "cast": [
+        { "actor": "Marek Nowak", "role": "Cartographer" },
+        { "actor": "Kasia Wozniak", "role": "Archivist" }
+      ],
+      "ratings": { "critics": 80, "audience": 8.3 },
+      "tags": ["staff-pick"]
+    },
+    {
+      "_id": 11,
+      "title": "Paper Lanterns",
+      "year": 2007,
+      "runtime": 105,
+      "genres": ["Drama", "Animation"],
+      "details": { "director": "Kenji Sato", "country": "Japan", "language": "Japanese" },
+      "cast": [
+        { "actor": "Haruto Sato", "role": "Voice Actor" },
+        { "actor": "Yui Takahashi", "role": "Voice Actor" }
+      ],
+      "ratings": { "audience": 7.9 },
+      "tags": ["animation", "family"]
+    },
+    {
+      "_id": 12,
+      "title": "Quantum Horizon",
+      "year": 2023,
+      "runtime": 148,
+      "genres": ["Sci-Fi", "Thriller"],
+      "details": { "director": "Nia Sterling", "country": "United Kingdom", "language": "English" },
+      "cast": [
+        { "actor": "Oliver Grant", "role": "Lead Physicist" },
+        { "actor": "Zainab Malik", "role": "Flight Surgeon" }
+      ],
+      "ratings": { "critics": 84, "audience": 8.5 },
+      "tags": ["4k", "sci-fi"]
+    },
+    {
+      "_id": 13,
+      "title": "Iron Citadel",
+      "year": 2017,
+      "runtime": 170,
+      "genres": ["Action", "Fantasy"],
+      "details": { "director": "Lukas Lindqvist", "country": "Germany", "language": "German" },
+      "cast": [
+        { "actor": "Klaus Richter", "role": "Commander" },
+        { "actor": "Greta Weiss", "role": "Siege Engineer" }
+      ],
+      "ratings": { "critics": 76, "audience": 7.4 }
+    },
+    {
+      "_id": 14,
+      "title": "Midnight in Valparaiso",
+      "year": 2014,
+      "runtime": 110,
+      "genres": ["Comedy", "Romance"],
+      "details": { "director": "Maren Holt", "country": "Chile", "language": "Spanish" },
+      "cast": [
+        { "actor": "Diego Morales", "role": "Chef" },
+        { "actor": "Camila Silva", "role": "Journalist" }
+      ],
+      "ratings": { "critics": 92, "audience": 8.9 },
+      "tags": ["romcom", "staff-pick"]
+    },
+    {
+      "_id": 15,
+      "title": "Fallen Constellation",
+      "year": 2016,
+      "runtime": 124,
+      "genres": ["Mystery", "Thriller"],
+      "details": { "director": "Sofia Morales", "country": "Mexico", "language": "Spanish" },
+      "cast": [
+        { "actor": "Elena Rostova", "role": "Investigator Gomez" },
+        { "actor": "Carlos Ramos", "role": "Coroner" }
+      ],
+      "ratings": { "critics": 81, "audience": 8.0 },
+      "tags": ["mystery"]
+    },
+    {
+      "_id": 16,
+      "title": "Copper Sky",
+      "year": 2002,
+      "runtime": 94,
+      "genres": ["Documentary", "History"],
+      "details": { "director": "Tariq Mansour", "country": "Egypt", "language": "Arabic" },
+      "cast": [
+        { "actor": "Omar Farouk", "role": "Narrator" }
+      ],
+      "ratings": { "critics": 86, "audience": 7.5 },
+      "tags": ["documentary"]
+    },
+    {
+      "_id": 17,
+      "title": "The Alchemist's Daughter",
+      "year": 2009,
+      "runtime": 122,
+      "genres": ["Drama", "Fantasy"],
+      "details": { "director": "Claire Beaumont", "country": "Canada", "language": "English" },
+      "cast": [
+        { "actor": "Chloe Laurent", "role": "Lead Herbalist" },
+        { "actor": "Etienne Dubois", "role": "Magistrate" }
+      ],
+      "ratings": { "critics": 79, "audience": 7.7 }
+    },
+    {
+      "_id": 18,
+      "title": "Signal to Noise",
+      "year": 2024,
+      "runtime": 116,
+      "genres": ["Sci-Fi", "Drama"],
+      "details": { "director": "Nia Sterling", "country": "United Kingdom", "language": "English" },
+      "cast": [
+        { "actor": "Marcus Wright", "role": "Radio Astronomer" },
+        { "actor": "Pooja Sharma", "role": "Data Analyst" }
+      ],
+      "ratings": { "critics": 72, "audience": 7.3 },
+      "tags": ["indie"]
+    },
+    {
+      "_id": 19,
+      "title": "Borealis Express",
+      "year": 1994,
+      "runtime": 96,
+      "genres": ["Comedy", "Adventure"],
+      "details": { "director": "Elena Silva", "country": "Brazil", "language": "Portuguese" },
+      "cast": [
+        { "actor": "Rodrigo Costa", "role": "Conductor" },
+        { "actor": "Beatriz Lima", "role": "Tour Guide" }
+      ],
+      "ratings": { "critics": 70, "audience": 7.1 },
+      "tags": ["classic", "comedy"]
+    },
+    {
+      "_id": 20,
+      "title": "Silent Tides",
+      "year": 2024,
+      "runtime": 102,
+      "genres": ["Documentary"],
+      "details": { "director": "Ravi Kapoor", "country": "India", "language": "English" },
+      "cast": [
+        { "actor": "Ananya Sen", "role": "Narrator" }
+      ],
+      "ratings": { "critics": 68, "audience": 6.8 },
+      "tags": ["nature", "documentary"]
+    }
+  ],
+  "users": [
+    {
+      "_id": 101,
+      "name": "Amina Al-Mansoor",
+      "email": "amina@example.com",
+      "plan": "premium",
+      "joined_on": "2025-01-10",
+      "preferences": { "favorite_genres": ["Drama", "Sci-Fi"], "max_rating": 10 }
+    },
+    {
+      "_id": 102,
+      "name": "Liam Vance",
+      "email": "liam@example.com",
+      "plan": "basic",
+      "joined_on": "2025-01-18",
+      "preferences": { "favorite_genres": ["Sci-Fi", "Drama"], "max_rating": 8 }
+    },
+    {
+      "_id": 103,
+      "name": "Chiyo Takahashi",
+      "email": "chiyo@example.com",
+      "plan": "free",
+      "joined_on": "2025-02-01",
+      "preferences": { "favorite_genres": ["Animation", "Comedy"], "max_rating": 9 }
+    },
+    {
+      "_id": 104,
+      "name": "Marcus Aurelius Bell",
+      "email": "marcus@example.com",
+      "plan": "premium",
+      "joined_on": "2025-02-14",
+      "preferences": { "favorite_genres": ["Action", "History"], "max_rating": 10 }
+    },
+    {
+      "_id": 105,
+      "name": "Sofia Lind",
+      "email": "sofia@example.com",
+      "plan": "basic",
+      "joined_on": "2025-03-05",
+      "preferences": { "favorite_genres": ["Mystery", "Thriller"], "max_rating": 9 }
+    },
+    {
+      "_id": 106,
+      "name": "Kofi Mensah",
+      "email": "kofi@example.com",
+      "plan": "free",
+      "joined_on": "2025-03-20",
+      "preferences": { "favorite_genres": ["Action", "Adventure"], "max_rating": 8 }
+    },
+    {
+      "_id": 107,
+      "name": "Elena Vasquez",
+      "email": "elena@example.com",
+      "plan": "premium",
+      "joined_on": "2025-04-02",
+      "preferences": { "favorite_genres": ["Drama", "Romance"], "max_rating": 10 }
+    },
+    {
+      "_id": 108,
+      "name": "Rajesh Patel",
+      "email": "rajesh@example.com",
+      "plan": "basic",
+      "joined_on": "2025-04-15",
+      "preferences": { "favorite_genres": ["Action", "Comedy"], "max_rating": 9 }
+    },
+    {
+      "_id": 109,
+      "name": "Chloe Dupont",
+      "email": "chloe@example.com",
+      "plan": "free",
+      "joined_on": "2025-05-01",
+      "preferences": { "favorite_genres": ["Fantasy", "Drama"], "max_rating": 8 }
+    },
+    {
+      "_id": 110,
+      "name": "Tariq Hadad",
+      "email": "tariq@example.com",
+      "plan": "premium",
+      "joined_on": "2025-05-18",
+      "preferences": { "favorite_genres": ["Documentary", "Sci-Fi"], "max_rating": 10 }
+    },
+    {
+      "_id": 111,
+      "name": "Hannah Schmidt",
+      "email": "hannah@example.com",
+      "plan": "basic",
+      "joined_on": "2025-06-10",
+      "preferences": { "favorite_genres": ["Thriller", "Crime"], "max_rating": 9 }
+    },
+    {
+      "_id": 112,
+      "name": "Nikoletta Rossi",
+      "email": "nikoletta@example.com",
+      "plan": "free",
+      "joined_on": "2025-06-25"
+    }
+  ],
+  "reviews": [
+    { "_id": 501, "movie_id": 1, "user_id": 101, "rating": 10, "comment": "A cinematic triumph with a shocking Twist at the end.", "posted_at": "2025-02-01T14:30:00Z" },
+    { "_id": 502, "movie_id": 1, "user_id": 105, "rating": 9, "comment": "Atmospheric, quiet and brilliant detective storytelling.", "posted_at": "2025-02-03T19:00:00Z" },
+    { "_id": 503, "movie_id": 2, "user_id": 103, "rating": 8, "comment": "Hilarious robot satire with stylish visuals.", "posted_at": "2025-02-10T12:00:00Z" },
+    { "_id": 504, "movie_id": 3, "user_id": 104, "rating": 9, "comment": "Epic space adventure with incredible practical effects.", "posted_at": "2025-02-15T21:15:00Z" },
+    { "_id": 505, "movie_id": 3, "user_id": 106, "rating": 2, "comment": "Too formulaic and predictable.", "posted_at": "2025-02-18T10:00:00Z" },
+    { "_id": 506, "movie_id": 5, "user_id": 102, "rating": 8, "comment": "Inventive steampunk mystery with great pacing.", "posted_at": "2025-03-01T18:45:00Z" },
+    { "_id": 507, "movie_id": 6, "user_id": 104, "rating": 9, "comment": "Stunning historical epic with breathtaking choreography.", "posted_at": "2025-03-08T20:30:00Z" },
+    { "_id": 508, "movie_id": 6, "user_id": 108, "rating": 8, "comment": "Great emotional core alongside thrilling martial arts.", "posted_at": "2025-03-12T15:00:00Z" },
+    { "_id": 509, "movie_id": 7, "user_id": 101, "rating": 9, "comment": "Tense cybersecurity thriller that never lets you breathe.", "posted_at": "2025-03-15T22:00:00Z" },
+    { "_id": 510, "movie_id": 7, "user_id": 105, "rating": 9, "comment": "Another clever plot twist from director Maren Holt.", "posted_at": "2025-03-20T16:20:00Z" },
+    { "_id": 511, "movie_id": 8, "user_id": 103, "rating": 7, "comment": "Charming Parisian heist comedy.", "posted_at": "2025-03-22T11:10:00Z" },
+    { "_id": 512, "movie_id": 8, "user_id": 111, "rating": 1, "comment": "Didn't find the humor engaging at all.", "posted_at": "2025-03-25T09:00:00Z" },
+    { "_id": 513, "movie_id": 9, "user_id": 106, "rating": 8, "comment": "Gorgeous underwater sequences and solid action.", "posted_at": "2025-04-01T17:30:00Z" },
+    { "_id": 514, "movie_id": 10, "user_id": 110, "rating": 8, "comment": "Slow, deliberate pacing that rewards patient viewers.", "posted_at": "2025-04-05T13:40:00Z" },
+    { "_id": 515, "movie_id": 12, "user_id": 101, "rating": 8, "comment": "Smart hard sci-fi that respects the audience.", "posted_at": "2025-04-10T20:10:00Z" },
+    { "_id": 516, "movie_id": 12, "user_id": 102, "rating": 9, "comment": "Mind-bending temporal paradoxes handled with care.", "posted_at": "2025-04-12T19:50:00Z" },
+    { "_id": 517, "movie_id": 13, "user_id": 104, "rating": 8, "comment": "Dark medieval fantasy with gritty battle sequences.", "posted_at": "2025-04-18T23:00:00Z" },
+    { "_id": 518, "movie_id": 14, "user_id": 107, "rating": 9, "comment": "Warm, witty and beautifully shot in Chile.", "posted_at": "2025-04-20T14:15:00Z" },
+    { "_id": 519, "movie_id": 14, "user_id": 108, "rating": 9, "comment": "Delightful romantic comedy with sparkling dialogue.", "posted_at": "2025-04-22T18:00:00Z" },
+    { "_id": 520, "movie_id": 15, "user_id": 105, "rating": 8, "comment": "Moody noir detective tale in Guadalajara.", "posted_at": "2025-05-02T21:40:00Z" },
+    { "_id": 521, "movie_id": 17, "user_id": 109, "rating": 7, "comment": "Lush period fantasy with great production design.", "posted_at": "2025-05-10T16:00:00Z" },
+    { "_id": 522, "movie_id": 18, "user_id": 110, "rating": 7, "comment": "A thought-provoking and slow indie drama about first contact.", "posted_at": "2025-05-15T12:30:00Z" },
+    { "_id": 523, "movie_id": 19, "user_id": 103, "rating": 7, "comment": "Lighthearted railway farce across snowy mountain passes.", "posted_at": "2025-05-20T15:45:00Z" },
+    { "_id": 524, "movie_id": 20, "user_id": 110, "rating": 7, "comment": "Poetic marine documentary with serene sound design.", "posted_at": "2025-05-25T11:00:00Z" },
+    { "_id": 525, "movie_id": 1, "user_id": 107, "rating": 9, "comment": "The central mystery holds up on repeat viewings.", "posted_at": "2025-05-28T19:20:00Z" }
+  ],
+  "watch_history": [
+    { "_id": 901, "user_id": 101, "movie_id": 1, "watched_at": "2025-01-15T20:00:00Z", "duration_mins": 156, "completed": true },
+    { "_id": 902, "user_id": 101, "movie_id": 7, "watched_at": "2025-01-20T21:30:00Z", "duration_mins": 128, "completed": true },
+    { "_id": 903, "user_id": 101, "movie_id": 13, "watched_at": "2025-01-28T19:00:00Z", "duration_mins": 135, "completed": false },
+    { "_id": 904, "user_id": 102, "movie_id": 5, "watched_at": "2025-02-02T18:15:00Z", "duration_mins": 134, "completed": true },
+    { "_id": 905, "user_id": 102, "movie_id": 12, "watched_at": "2025-02-10T20:45:00Z", "duration_mins": 148, "completed": true },
+    { "_id": 906, "user_id": 103, "movie_id": 2, "watched_at": "2025-02-12T14:00:00Z", "duration_mins": 88, "completed": true },
+    { "_id": 907, "user_id": 103, "movie_id": 8, "watched_at": "2025-02-18T16:30:00Z", "duration_mins": 92, "completed": true },
+    { "_id": 908, "user_id": 103, "movie_id": 19, "watched_at": "2025-02-25T11:00:00Z", "duration_mins": 96, "completed": true },
+    { "_id": 909, "user_id": 104, "movie_id": 3, "watched_at": "2025-03-01T20:00:00Z", "duration_mins": 142, "completed": true },
+    { "_id": 910, "user_id": 104, "movie_id": 6, "watched_at": "2025-03-05T19:30:00Z", "duration_mins": 162, "completed": true },
+    { "_id": 911, "user_id": 104, "movie_id": 13, "watched_at": "2025-03-12T21:00:00Z", "duration_mins": 170, "completed": true },
+    { "_id": 912, "user_id": 105, "movie_id": 1, "watched_at": "2025-03-14T18:00:00Z", "duration_mins": 156, "completed": true },
+    { "_id": 913, "user_id": 105, "movie_id": 7, "watched_at": "2025-03-18T22:15:00Z", "duration_mins": 128, "completed": true },
+    { "_id": 914, "user_id": 105, "movie_id": 15, "watched_at": "2025-03-24T20:45:00Z", "duration_mins": 124, "completed": true },
+    { "_id": 915, "user_id": 106, "movie_id": 3, "watched_at": "2025-04-02T17:00:00Z", "duration_mins": 45, "completed": false },
+    { "_id": 916, "user_id": 106, "movie_id": 9, "watched_at": "2025-04-06T19:20:00Z", "duration_mins": 138, "completed": true },
+    { "_id": 917, "user_id": 107, "movie_id": 1, "watched_at": "2025-04-10T15:30:00Z", "duration_mins": 156, "completed": true },
+    { "_id": 918, "user_id": 107, "movie_id": 4, "watched_at": "2025-04-14T20:00:00Z", "duration_mins": 115, "completed": true },
+    { "_id": 919, "user_id": 107, "movie_id": 14, "watched_at": "2025-04-18T18:45:00Z", "duration_mins": 110, "completed": true },
+    { "_id": 920, "user_id": 108, "movie_id": 6, "watched_at": "2025-04-20T21:10:00Z", "duration_mins": 162, "completed": true },
+    { "_id": 921, "user_id": 108, "movie_id": 14, "watched_at": "2025-04-25T19:00:00Z", "duration_mins": 110, "completed": true },
+    { "_id": 922, "user_id": 109, "movie_id": 17, "watched_at": "2025-05-01T16:15:00Z", "duration_mins": 122, "completed": true },
+    { "_id": 923, "user_id": 110, "movie_id": 10, "watched_at": "2025-05-04T14:30:00Z", "duration_mins": 118, "completed": true },
+    { "_id": 924, "user_id": 110, "movie_id": 16, "watched_at": "2025-05-08T17:00:00Z", "duration_mins": 94, "completed": true },
+    { "_id": 925, "user_id": 110, "movie_id": 18, "watched_at": "2025-05-12T20:15:00Z", "duration_mins": 116, "completed": true },
+    { "_id": 926, "user_id": 110, "movie_id": 20, "watched_at": "2025-05-16T11:45:00Z", "duration_mins": 102, "completed": true },
+    { "_id": 927, "user_id": 111, "movie_id": 8, "watched_at": "2025-05-20T19:30:00Z", "duration_mins": 30, "completed": false },
+    { "_id": 928, "user_id": 111, "movie_id": 15, "watched_at": "2025-05-22T21:00:00Z", "duration_mins": 124, "completed": true },
+    { "_id": 929, "user_id": 112, "movie_id": 2, "watched_at": "2025-05-25T13:00:00Z", "duration_mins": 88, "completed": true },
+    { "_id": 930, "user_id": 101, "movie_id": 3, "watched_at": "2025-05-27T18:00:00Z", "duration_mins": 142, "completed": true },
+    { "_id": 931, "user_id": 102, "movie_id": 18, "watched_at": "2025-05-29T20:30:00Z", "duration_mins": 116, "completed": true },
+    { "_id": 932, "user_id": 104, "movie_id": 7, "watched_at": "2025-06-01T21:45:00Z", "duration_mins": 128, "completed": true },
+    { "_id": 933, "user_id": 105, "movie_id": 5, "watched_at": "2025-06-03T19:15:00Z", "duration_mins": 134, "completed": true },
+    { "_id": 934, "user_id": 107, "movie_id": 8, "watched_at": "2025-06-05T16:00:00Z", "duration_mins": 92, "completed": true },
+    { "_id": 935, "user_id": 108, "movie_id": 3, "watched_at": "2025-06-08T20:00:00Z", "duration_mins": 142, "completed": true },
+    { "_id": 936, "user_id": 105, "movie_id": 5, "watched_at": "2025-06-10T17:30:00Z", "duration_mins": 156, "completed": true }
+  ]
+}
+

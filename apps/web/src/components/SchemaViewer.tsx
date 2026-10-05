@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { SchemaInfo, TableInfo } from '@codeadda/core';
+import type { LabLanguage, SchemaInfo, TableInfo } from '@codeadda/core';
 import { cx } from '../lib/cx';
 
 function Badge({ children, tone }: { children: string; tone: 'pk' | 'fk' }) {
@@ -23,10 +23,15 @@ interface SchemaViewerProps {
   placeholder?: { subtitle: string; message: string };
   /** Fill a pane: no outer card border/radius and no inner scroll; the parent scrolls. */
   flush?: boolean;
+  unit?: string;
+  language?: LabLanguage;
 }
 
-export function SchemaViewer({ schema, onSample, disabled = false, placeholder, flush = false }: SchemaViewerProps) {
+export function SchemaViewer({ schema, onSample, disabled = false, placeholder, flush = false, unit = 'rows', language }: SchemaViewerProps) {
   const [open, setOpen] = useState<Record<string, boolean>>({});
+  const isMongo = language === 'mongodb' || unit === 'documents';
+  const singleUnit = unit === 'documents' ? 'document' : 'row';
+  const pluralUnit = unit === 'documents' ? 'documents' : 'rows';
   if (!schema && placeholder) {
     return (
       <div className="flex h-full min-h-48 flex-col">
@@ -63,7 +68,7 @@ export function SchemaViewer({ schema, onSample, disabled = false, placeholder, 
                 <span className="min-w-0 flex-1">
                   <span className="block font-mono text-sm font-semibold">{t.name}</span>
                   {t.description && <span className="block text-xs text-muted">{t.description}</span>}
-                  <span className="mt-1.5 block text-[0.6875rem] text-faint">{t.rowCount} {t.rowCount === 1 ? 'row' : 'rows'}</span>
+                  <span className="mt-1.5 block text-[0.6875rem] text-faint">{t.rowCount} {t.rowCount === 1 ? singleUnit : pluralUnit}</span>
                 </span>
                 <span aria-hidden="true" className="self-center text-[0.625rem] text-faint">{isOpen ? '▲' : '▼'}</span>
               </button>
@@ -87,7 +92,7 @@ export function SchemaViewer({ schema, onSample, disabled = false, placeholder, 
                               {c.isPrimary && <Badge tone="pk">PK</Badge>}
                               {c.isForeign && <Badge tone="fk">FK</Badge>}
                             </td>
-                            <td className="px-3 py-2 font-mono text-xs whitespace-nowrap text-muted">{c.displayType ?? c.type.toUpperCase()}</td>
+                            <td className="px-3 py-2 font-mono text-xs whitespace-nowrap text-muted">{c.displayType ?? (isMongo ? c.type : c.type.toUpperCase())}</td>
                             <td className="px-3 py-2 text-muted">{c.description ?? ''}</td>
                           </tr>
                         ))}

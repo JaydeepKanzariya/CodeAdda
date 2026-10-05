@@ -2,9 +2,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { UPCOMING_LABS, labSummaries, loadLab, sortByLabOrder, upcomingLabs } from './registry';
 
 describe('registry', () => {
-  it('lists both live labs as summaries, SQL first', () => {
-    expect(labSummaries.map((s) => s.id)).toEqual(['sql', 'postgres']);
+  it('lists all three live labs as summaries, SQL first', () => {
+    expect(labSummaries.map((s) => s.id)).toEqual(['sql', 'postgres', 'mongodb']);
     expect(labSummaries[0]).toMatchObject({ title: 'SQL Lab', lessons: 62, problems: 8 });
+    expect(labSummaries[2]).toMatchObject({ title: 'MongoDB Lab', lessons: 40, problems: 12 });
   });
 
   it('orders sql → postgres → mongodb → redis → others alphabetically', () => {
@@ -16,6 +17,9 @@ describe('registry', () => {
     const pg = await loadLab('postgres');
     expect(pg?.lessons.flatMap((c) => c.items)).toHaveLength(46);
     expect(await loadLab('postgres')).toBe(pg);
+    const mongo = await loadLab('mongodb');
+    expect(mongo?.lessons.flatMap((c) => c.items)).toHaveLength(40);
+    expect(await loadLab('mongodb')).toBe(mongo);
     expect(await loadLab('nope')).toBeUndefined();
     expect(await loadLab('constructor')).toBeUndefined();
     expect(await loadLab('toString')).toBeUndefined();
@@ -41,5 +45,5 @@ describe('registry', () => {
 describe('upcomingLabs', () => {
   it('lists every upcoming name when none is live', () => expect(upcomingLabs([])).toEqual([...UPCOMING_LABS]));
   it('drops names that are live', () => expect(upcomingLabs([{ title: 'PostgreSQL Lab' }])).toEqual(['MongoDB', 'Redis']));
-  it('defaults to the real labs, where SQL and PostgreSQL are live', () => expect(upcomingLabs()).toEqual(['MongoDB', 'Redis']));
+  it('defaults to the real labs, where SQL, PostgreSQL and MongoDB are live', () => expect(upcomingLabs()).toEqual(['Redis']));
 });
