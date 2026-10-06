@@ -23,7 +23,7 @@ describe('Navbar', () => {
     expect(within(strip).getByRole('link', { name: 'SQL Lab' })).toBeInTheDocument();
     expect(within(strip).getByRole('link', { name: 'PostgreSQL Lab' })).toBeInTheDocument();
     expect(within(strip).getByRole('link', { name: 'MongoDB Lab' })).toBeInTheDocument();
-    for (const name of ['Redis']) expect(within(strip).getByText(name)).toBeInTheDocument();
+    expect(within(strip).getByRole('link', { name: 'Redis Lab' })).toBeInTheDocument();
     expect(strip).toHaveClass('no-scrollbar');
   });
 

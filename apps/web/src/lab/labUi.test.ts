@@ -10,6 +10,7 @@ describe('labUi', () => {
       skipPrompt: 'Already know SQL?',
       problemsSubtitle: 'Original SQL challenges, easy to hard',
       unit: 'rows',
+      resultUnit: 'row',
     });
   });
 
@@ -21,10 +22,21 @@ describe('labUi', () => {
       skipPrompt: 'Already know the MongoDB basics?',
       problemsSubtitle: 'Original MongoDB challenges, easy to hard',
       unit: 'documents',
+      altView: 'Documents',
+      resultUnit: 'document',
     });
   });
 
-  it('falls back to sql configuration for redis', () => {
-    expect(labUi('redis')).toEqual(labUi('sql'));
+  it('returns redis configuration', () => {
+    expect(labUi('redis')).toEqual({
+      monaco: 'redis',
+      editorTitle: 'Redis CLI',
+      starter: '# Write your Redis commands here\n',
+      skipPrompt: 'Already know the Redis basics?',
+      problemsSubtitle: 'Original Redis challenges, easy to hard',
+      unit: 'keys',
+      altView: 'Transcript',
+      resultUnit: 'row',
+    });
   });
 });

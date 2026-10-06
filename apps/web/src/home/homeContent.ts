@@ -109,6 +109,7 @@ export const LIVE_DESCRIPTIONS: Record<string, string> = {
   sql: 'From your first SELECT to joins, CTEs and window functions, all on one realistic shop database.',
   postgres: 'From your first table to JSONB, window functions and indexes, all on a food-delivery database.',
   mongodb: 'From your first document to aggregation pipelines and joins, all on a streaming-service database.',
+  redis: 'From your first key to Streams, caching and rate limiters, all on a live gaming-platform database.',
 };
 export const LIVE_DESCRIPTION_FALLBACK = 'Short lessons, a live database and an instant check, all inside your browser.';
 

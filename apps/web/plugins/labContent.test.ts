@@ -16,11 +16,12 @@ async function loadVirtual(id: string): Promise<string> {
 describe('labContent plugin data', () => {
   it('summarises every valid lab and keeps each built lab keyed by folder', async () => {
     const { summaries, labs } = await generateModules(contentDir);
-    expect(summaries.map((s) => s.id).sort()).toEqual(['mongodb', 'postgres', 'sql']);
-    expect(Object.keys(labs).sort()).toEqual(['mongodb', 'postgres', 'sql']);
+    expect(summaries.map((s) => s.id).sort()).toEqual(['mongodb', 'postgres', 'redis', 'sql']);
+    expect(Object.keys(labs).sort()).toEqual(['mongodb', 'postgres', 'redis', 'sql']);
     expect(labs.sql!.id).toBe('sql');
     expect(labs.postgres!.lessons.flatMap((c) => c.items)).toHaveLength(46);
     expect(labs.mongodb!.lessons.flatMap((c) => c.items)).toHaveLength(40);
+    expect(labs.redis!.lessons.flatMap((c) => c.items)).toHaveLength(45);
   });
 
   it('emits each lab as plain prebuilt data, so no parser ships to the browser', async () => {

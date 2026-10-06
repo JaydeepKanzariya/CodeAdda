@@ -172,7 +172,7 @@ export function ProblemWorkspace({ lab, item, engine }: Props) {
         ) : panel === 'results' ? (
           <div className="fs-results space-y-4">
             {engine.check && <CheckBanner key={engine.runId} check={engine.check} />}
-            <ResultsPanel result={engine.result} running={engine.running} />
+            <ResultsPanel result={engine.result} running={engine.running} altView={ui.altView} resultUnit={ui.resultUnit} />
           </div>
         ) : (
           <div className="fs-schema">{schemaViewer}</div>

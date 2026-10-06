@@ -3,9 +3,10 @@ import { UPCOMING_LABS, labSummaries, loadLab, sortByLabOrder, upcomingLabs } fr
 
 describe('registry', () => {
   it('lists all three live labs as summaries, SQL first', () => {
-    expect(labSummaries.map((s) => s.id)).toEqual(['sql', 'postgres', 'mongodb']);
+    expect(labSummaries.map((s) => s.id)).toEqual(['sql', 'postgres', 'mongodb', 'redis']);
     expect(labSummaries[0]).toMatchObject({ title: 'SQL Lab', lessons: 62, problems: 8 });
     expect(labSummaries[2]).toMatchObject({ title: 'MongoDB Lab', lessons: 40, problems: 12 });
+    expect(labSummaries[3]).toMatchObject({ title: 'Redis Lab', lessons: 45, problems: 12 });
   });
 
   it('orders sql → postgres → mongodb → redis → others alphabetically', () => {
@@ -44,6 +45,6 @@ describe('registry', () => {
 
 describe('upcomingLabs', () => {
   it('lists every upcoming name when none is live', () => expect(upcomingLabs([])).toEqual([...UPCOMING_LABS]));
-  it('drops names that are live', () => expect(upcomingLabs([{ title: 'PostgreSQL Lab' }])).toEqual(['MongoDB', 'Redis']));
-  it('defaults to the real labs, where SQL, PostgreSQL and MongoDB are live', () => expect(upcomingLabs()).toEqual(['Redis']));
+  it('has no upcoming labs once all announced labs are live', () => expect(upcomingLabs([{ title: 'PostgreSQL Lab' }])).toEqual([]));
+  it('defaults to the real labs, where all four labs are live', () => expect(upcomingLabs()).toEqual([]));
 });

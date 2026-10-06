@@ -9,7 +9,7 @@ import { heroPill, labStats } from './homeContent';
 import { HomePage } from './HomePage';
 
 const renderHome = () => render(<MemoryRouter><HomePage /></MemoryRouter>);
-const labsRegion = () => screen.getByRole('region', { name: 'Three labs are open. One more is cooking.' });
+const labsRegion = () => screen.getByRole('region', { name: 'Four labs are open.' });
 
 describe('HomePage', () => {
   it('has one h1, the primary link and the SQL card both pointing at /sql', () => {
@@ -33,18 +33,13 @@ describe('HomePage', () => {
     expect(screen.getByText(new RegExp(`^${stats.animated} lessons animate`))).toBeInTheDocument();
   });
 
-  it('renders the upcoming labs as non-clickable coming-soon cards', () => {
+  it('renders every live lab as a link and no coming-soon cards', () => {
     renderHome();
     const region = labsRegion();
     expect(within(region).getAllByRole('listitem')).toHaveLength(labSummaries.length + upcomingLabs().length);
-    expect(within(region).getAllByText('Coming soon')).toHaveLength(upcomingLabs().length);
-    for (const name of upcomingLabs()) {
-      const card = within(region).getByText(name).closest('[data-testid="coming-soon-card"]')!;
-      expect(card).not.toBeNull();
-      expect(card.querySelector('a, button')).toBeNull();
-    }
     expect(within(region).getByRole('link', { name: /MongoDB/ })).toHaveAttribute('href', '/mongodb');
-    expect(screen.queryByRole('link', { name: /Redis/ })).toBeNull();
+    expect(within(region).getByRole('link', { name: /Redis/ })).toHaveAttribute('href', '/redis');
+    expect(within(region).queryByText('Coming soon')).toBeNull();
   });
 
   it('renders the steps, features, CTA and footer with real targets', () => {
@@ -94,8 +89,8 @@ describe('HomePage', () => {
       expect(screen.queryByText('SQL lessons')).toBeNull();
       expect(screen.queryByRole('link', { name: /Start the SQL lab/ })).toBeNull();
       expect(screen.queryByRole('heading', { name: 'The database is already running.' })).toBeNull();
-      const region = screen.getByRole('region', { name: 'No lab is open yet. Three more are cooking.' });
-      expect(within(region).getAllByRole('listitem')).toHaveLength(3);
+      const region = screen.getByRole('region', { name: 'No lab is open yet.' });
+      expect(within(region).queryAllByRole('listitem')).toHaveLength(0);
       expect(within(region).queryByRole('link')).toBeNull();
     } finally {
       vi.doUnmock('../content/registry');

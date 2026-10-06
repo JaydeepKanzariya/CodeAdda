@@ -1,0 +1,129 @@
+﻿# @describe user:* Registered ArcadePulse player profiles
+# @describe game:* Games in the ArcadePulse catalog
+# @describe views:* Integer game view counters
+# @describe session:* Active login sessions
+# @describe tags:user:* Player interest tags
+# @describe leaderboard:* XP leaderboards
+HSET user:101 name "Amina Rao" email amina@arcade.test tier pro xp 980 joined_on 2025-01-12 country IN
+HSET user:102 name "Mateo Silva" email mateo@arcade.test tier plus xp 760 joined_on 2025-02-03 country BR
+HSET user:103 name "Yuki Tanaka" email yuki@arcade.test tier pro xp 1120 joined_on 2025-03-19 country JP
+HSET user:104 name "Nora Okafor" email nora@arcade.test tier free xp 430 joined_on 2025-04-08 country NG
+HSET user:105 name "Liam Chen" email liam@arcade.test tier plus xp 880 joined_on 2025-05-21 country SG
+HSET user:106 name "Zara Haddad" email zara@arcade.test tier pro xp 1040 joined_on 2025-06-14 country AE
+HSET user:107 name "Ivo Petrov" email ivo@arcade.test tier free xp 315 joined_on 2025-07-02 country BG
+HSET user:108 name "Sofia Rossi" email sofia@arcade.test tier plus xp 670 joined_on 2025-08-11 country IT
+HSET user:109 name "Noah Williams" email noah@arcade.test tier pro xp 930 joined_on 2025-09-27 country US
+HSET user:110 name "Leila Mensah" email leila@arcade.test tier free xp 520 joined_on 2025-10-05 country GH
+HSET user:111 name "Arjun Mehta" email arjun@arcade.test tier plus xp 760 joined_on 2025-11-16 country IN
+HSET user:112 name "Elena Garcia" email elena@arcade.test tier free xp 245 joined_on 2025-12-01
+HSET game:1 title "Skybound Circuit" genre racing price 19.99 rating 4.6
+HSET game:2 title "Moonforge" genre rpg price 29.99 rating 4.8
+HSET game:3 title "Pixel Orchard" genre puzzle price 4.99 rating 4.2
+HSET game:4 title "Neon Tactics" genre strategy price 24.99 rating 4.7
+HSET game:5 title "Driftline" genre racing price 14.99 rating 4.1
+HSET game:6 title "Lantern Vale" genre adventure price 9.99 rating 4.5
+HSET game:7 title "Byte Brigade" genre action price 39.99 rating 4.9
+HSET game:8 title "Quiet Cosmos" genre simulation price 12.99 rating 4.0
+SET views:game:1 120
+SET views:game:2 230
+SET views:game:3 95
+SET views:game:4 410
+SET views:game:5 180
+SET views:game:6 75
+SET views:game:7 520
+SET views:game:8 160
+SET views:total 1790
+SET revenue:day:2026-01-01 1499.5
+SET session:alpha 101 EX 120
+SET session:beta 102 EX 1800
+SET session:gamma 103 EX 3600
+SET session:delta 104 EX 86400
+SET session:orphan 105
+SET session:legacy 106
+SET session:guest_99 999
+SET cache:game:3 "Pixel Orchard details" EX 300
+SET cache:featured "game:7"
+RPUSH feed:101 levelup:7 badge:speedrun quest:desert win:game:3 levelup:8 badge:collector quest:moon win:game:2 levelup:9 badge:combo quest:sky win:game:1
+RPUSH queue:emails welcome:101 receipt:102 digest:103 invite:104 alert:105
+RPUSH queue:emails:processing __empty__
+LPOP queue:emails:processing
+SADD tags:user:101 racing indie speedrun
+SADD tags:user:102 racing co-op indie
+SADD tags:user:103 rpg co-op speedrun
+SADD tags:user:104 puzzle indie
+SADD tags:user:105 racing strategy
+SADD tags:user:106 rpg strategy
+SADD friends:101 102 103 105 109
+SADD friends:102 101 103 105 109
+SADD online:users 101 102 103 105 106 109
+SADD index:tier:pro 101 103 106 109
+SADD index:tier:plus 102 105 108 111
+SADD index:country:IN 101 111
+ZADD leaderboard:global 980 101
+ZADD leaderboard:global 760 102
+ZADD leaderboard:global 1120 103
+ZADD leaderboard:global 430 104
+ZADD leaderboard:global 880 105
+ZADD leaderboard:global 1040 106
+ZADD leaderboard:global 315 107
+ZADD leaderboard:global 670 108
+ZADD leaderboard:global 930 109
+ZADD leaderboard:global 520 110
+ZADD leaderboard:global 760 111
+ZADD leaderboard:global 245 112
+ZADD leaderboard:week:2026-01 1120 user:101
+ZADD leaderboard:week:2026-01 1040 user:102
+ZADD leaderboard:week:2026-01 980 user:103
+ZADD leaderboard:week:2026-01 930 user:104
+ZADD leaderboard:week:2026-01 880 user:105
+ZADD leaderboard:week:2026-01 760 user:106
+ZADD leaderboard:week:2026-01 670 user:107
+ZADD leaderboard:week:2026-01 520 user:108
+ZADD bonus:week:2026-01 10 user:101
+ZADD bonus:week:2026-01 20 user:102
+ZADD bonus:week:2026-01 15 user:103
+ZADD bonus:week:2026-01 30 user:104
+ZADD bonus:week:2026-01 25 user:105
+SET wallet:101 500
+SET wallet:102 120
+HSET stock:item:7 name "Byte Brigade" stock 9 price 39.99
+SETBIT active:2026-01-01 101 1
+SETBIT active:2026-01-01 103 1
+SETBIT active:2026-01-01 106 1
+SETBIT active:2026-01-01 102 1
+SETBIT active:2026-01-02 101 1
+SETBIT active:2026-01-02 103 1
+SETBIT active:2026-01-02 106 1
+SETBIT active:2026-01-02 102 1
+SETBIT active:2026-01-03 101 1
+SETBIT active:2026-01-03 103 1
+SETBIT active:2026-01-03 106 1
+SETBIT active:2026-01-03 102 1
+SETBIT active:2026-01-04 101 1
+SETBIT active:2026-01-04 103 1
+SETBIT active:2026-01-04 106 1
+SETBIT active:2026-01-05 101 1
+SETBIT active:2026-01-05 103 1
+SETBIT active:2026-01-05 106 1
+SETBIT active:2026-01-06 101 1
+SETBIT active:2026-01-06 103 1
+SETBIT active:2026-01-06 106 1
+SETBIT active:2026-01-07 101 1
+SETBIT active:2026-01-07 103 1
+SETBIT active:2026-01-07 106 1
+PFADD visitors:2026-01-01 a b c d e
+PFADD visitors:2026-01-02 d e f g
+XADD events:matches 1700000000000-0 match m1 scorer 101 points 3
+XADD events:matches 1700000000001-0 match m2 scorer 103 points 2
+XADD events:matches 1700000000002-0 match m3 scorer 106 points 4
+XADD events:matches 1700000000003-0 match m4 scorer 102 points 1
+XADD events:matches 1700000000004-0 match m5 scorer 105 points 2
+XADD events:matches 1700000000005-0 match m6 scorer 109 points 5
+XADD events:matches 1700000000006-0 match m7 scorer 101 points 1
+XADD events:matches 1700000000007-0 match m8 scorer 103 points 3
+XADD events:matches 1700000000008-0 match m9 scorer 106 points 2
+XADD events:matches 1700000000009-0 match m10 scorer 102 points 4
+XGROUP CREATE events:matches scorers 0
+XREADGROUP GROUP scorers worker-a COUNT 4 STREAMS events:matches >
+ZADD ratelimit:api:101 1700000000000 req1 1700000000500 req2 1700000001000 req3 1700000001500 req4
+CONFIG SET maxmemory-policy noeviction

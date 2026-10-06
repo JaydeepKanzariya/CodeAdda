@@ -3,8 +3,18 @@ import type { QueryResult } from '@codeadda/core';
 import { cx } from '../lib/cx';
 import { ResultTable } from './ResultTable';
 
-export function ResultsPanel({ result, running }: { result?: QueryResult; running: boolean }) {
-  const [view, setView] = useState<'table' | 'documents'>('table');
+export function ResultsPanel({
+  result,
+  running,
+  altView,
+  resultUnit,
+}: {
+  result?: QueryResult;
+  running: boolean;
+  altView?: string;
+  resultUnit?: 'row' | 'document';
+}) {
+  const [view, setView] = useState<'table' | 'alternate'>('table');
 
   if (running) return <p className="text-sm text-muted">Running…</p>;
   if (!result) return <p className="py-10 text-center text-sm text-faint">Run a query to see results</p>;
@@ -19,10 +29,13 @@ export function ResultsPanel({ result, running }: { result?: QueryResult; runnin
   }
 
   const documents = result.documents;
-  const hasDocs = documents !== undefined;
-  const unit = documents
-    ? result.rowCount === 1 ? 'document' : 'documents'
-    : result.rowCount === 1 ? 'row' : 'rows';
+  const alternate = altView ?? (documents !== undefined ? 'Documents' : undefined);
+  const hasAlternate = alternate !== undefined && documents !== undefined;
+  const unit = resultUnit
+    ? result.rowCount === 1 ? resultUnit : `${resultUnit}s`
+    : documents
+      ? result.rowCount === 1 ? 'document' : 'documents'
+      : result.rowCount === 1 ? 'row' : 'rows';
 
   return (
     <div className="space-y-3">
@@ -31,7 +44,7 @@ export function ResultsPanel({ result, running }: { result?: QueryResult; runnin
           {result.notice}
         </p>
       )}
-      {hasDocs && (
+      {hasAlternate && (
         <div className="flex items-center justify-between">
           <div role="radiogroup" aria-label="Results view" className="inline-flex rounded-md border border-line bg-subtle p-0.5 text-xs font-medium">
             <button
@@ -49,26 +62,26 @@ export function ResultsPanel({ result, running }: { result?: QueryResult; runnin
             <button
               type="button"
               role="radio"
-              aria-checked={view === 'documents'}
-              onClick={() => setView('documents')}
+              aria-checked={view === 'alternate'}
+              onClick={() => setView('alternate')}
               className={cx(
                 'rounded px-2.5 py-1 transition-colors',
-                view === 'documents' ? 'bg-surface text-ink shadow-soft' : 'text-muted hover:text-ink',
+                view === 'alternate' ? 'bg-surface text-ink shadow-soft' : 'text-muted hover:text-ink',
               )}
             >
-              Documents
+              {alternate}
             </button>
           </div>
         </div>
       )}
-      {view === 'documents' && documents ? (
+      {view === 'alternate' && documents ? (
         <div className="max-h-[420px] space-y-2 overflow-auto">
           {documents.length === 0 ? (
             <p className="py-6 text-center text-sm text-faint">0 documents</p>
           ) : (
             documents.map((doc, idx) => (
               <pre key={idx} className="rounded-md border border-line bg-page p-3 font-mono text-sm whitespace-pre-wrap">
-                {JSON.stringify(doc, null, 2)}
+                {typeof doc === 'string' ? doc : JSON.stringify(doc, null, 2)}
               </pre>
             ))
           )}
