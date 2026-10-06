@@ -29,9 +29,9 @@ interface SchemaViewerProps {
 
 export function SchemaViewer({ schema, onSample, disabled = false, placeholder, flush = false, unit = 'rows', language }: SchemaViewerProps) {
   const [open, setOpen] = useState<Record<string, boolean>>({});
-  const isMongo = language === 'mongodb' || unit === 'documents';
-  const singleUnit = unit === 'documents' ? 'document' : 'row';
-  const pluralUnit = unit === 'documents' ? 'documents' : 'rows';
+  const upper = !language || language === 'sql';
+  const singleUnit = unit === 'documents' ? 'document' : unit.endsWith('s') ? unit.slice(0, -1) : unit;
+  const pluralUnit = unit;
   if (!schema && placeholder) {
     return (
       <div className="flex h-full min-h-48 flex-col">
@@ -92,7 +92,7 @@ export function SchemaViewer({ schema, onSample, disabled = false, placeholder, 
                               {c.isPrimary && <Badge tone="pk">PK</Badge>}
                               {c.isForeign && <Badge tone="fk">FK</Badge>}
                             </td>
-                            <td className="px-3 py-2 font-mono text-xs whitespace-nowrap text-muted">{c.displayType ?? (isMongo ? c.type : c.type.toUpperCase())}</td>
+                            <td className="px-3 py-2 font-mono text-xs whitespace-nowrap text-muted">{c.displayType ?? (upper ? c.type.toUpperCase() : c.type)}</td>
                             <td className="px-3 py-2 text-muted">{c.description ?? ''}</td>
                           </tr>
                         ))}

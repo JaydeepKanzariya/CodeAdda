@@ -28,8 +28,8 @@ export function loadLab(id: string): Promise<Lab | undefined> {
 }
 
 /** Labs announced in the navbar, lab grid and footer before their content folder exists. */
-export const UPCOMING_LABS = ['PostgreSQL', 'MongoDB', 'Redis'] as const;
-export type UpcomingLab = (typeof UPCOMING_LABS)[number];
+export const UPCOMING_LABS: readonly UpcomingLab[] = [];
+export type UpcomingLab = 'PostgreSQL' | 'MongoDB' | 'Redis';
 
 /** Upcoming names that are not yet live. A lab is live once a lab's title starts with the name. */
 export function upcomingLabs(live: { title: string }[] = labSummaries): UpcomingLab[] {

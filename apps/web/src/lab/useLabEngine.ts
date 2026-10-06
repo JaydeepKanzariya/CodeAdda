@@ -137,21 +137,32 @@ export function useLabEngine(
       if (engines.current !== e) return;
       const gen = generation.current;
       setState((s) => ({ ...s, running: true, check: undefined }));
-      let result = withLeftoverHint(await e.main.run(query));
-      let check: CheckResult | undefined;
-      let schema: SchemaInfo | undefined;
-      if (result.ok) {
-        if (DESTRUCTIVE.test(query)) result = { ...result, notice: result.notice ? `${result.notice} ${RESET_HINT}` : RESET_HINT };
-        try {
-          check = await grade(e.grader, item, dataset, query);
-          if (check.pass) progress.markComplete(lab.id, item.id);
-        } catch (err) {
-          check = { pass: false, reason: `Could not check this answer: ${message(err)}`, missing: [], extra: [] };
+      try {
+        let result = withLeftoverHint(await e.main.run(query));
+        let check: CheckResult | undefined;
+        let schema: SchemaInfo | undefined;
+        if (result.ok) {
+          if (DESTRUCTIVE.test(query)) result = { ...result, notice: result.notice ? `${result.notice} ${RESET_HINT}` : RESET_HINT };
+          try {
+            check = await grade(e.grader, item, dataset, query);
+            if (check.pass) progress.markComplete(lab.id, item.id);
+          } catch (err) {
+            check = { pass: false, reason: `Could not check this answer: ${message(err)}`, missing: [], extra: [] };
+          }
+          schema = await e.main.describe().catch(() => undefined);
         }
-        schema = await e.main.describe().catch(() => undefined);
+        if (gen !== generation.current) return; // the learner moved to another lesson meanwhile
+        setState((s) => ({ ...s, running: false, result, check, schema: schema ?? s.schema, runId: s.runId + 1 }));
+      } catch (err) {
+        if (gen !== generation.current) return;
+        setState((s) => ({
+          ...s,
+          running: false,
+          result: { ok: false, error: { message: message(err) } },
+          check: undefined,
+          runId: s.runId + 1,
+        }));
       }
-      if (gen !== generation.current) return; // the learner moved to another lesson meanwhile
-      setState((s) => ({ ...s, running: false, result, check, schema: schema ?? s.schema, runId: s.runId + 1 }));
     },
     [lab.id, item, dataset, progress],
   );
@@ -184,9 +195,14 @@ export function useLabEngine(
     if (!e) return;
     const gen = generation.current;
     setState((s) => ({ ...s, running: true }));
-    const result = await e.main.run(t.sampleQuery);
-    if (gen !== generation.current) return;
-    setState((s) => ({ ...s, running: false, result, check: undefined, runId: s.runId + 1 }));
+    try {
+      const result = await e.main.run(t.sampleQuery);
+      if (gen !== generation.current) return;
+      setState((s) => ({ ...s, running: false, result, check: undefined, runId: s.runId + 1 }));
+    } catch (err) {
+      if (gen !== generation.current) return;
+      setState((s) => ({ ...s, running: false, result: { ok: false, error: { message: message(err) } }, check: undefined, runId: s.runId + 1 }));
+    }
   }, []);
 
   const retry = useCallback(() => {

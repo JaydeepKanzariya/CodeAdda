@@ -1,0 +1,23 @@
+export { Keyspace, WRONG_TYPE } from "../keyspace";
+export const GENERIC_COMMANDS = [
+  "PING",
+  "ECHO",
+  "TIME",
+  "DEL",
+  "UNLINK",
+  "EXISTS",
+  "TYPE",
+  "RENAME",
+  "RENAMENX",
+  "KEYS",
+  "SCAN",
+  "DBSIZE",
+  "FLUSHDB",
+  "FLUSHALL",
+  "EXPIRE",
+  "PEXPIRE",
+  "EXPIREAT",
+  "TTL",
+  "PTTL",
+  "PERSIST",
+] as const;

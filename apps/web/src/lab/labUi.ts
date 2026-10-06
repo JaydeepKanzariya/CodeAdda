@@ -7,6 +7,8 @@ export interface LabUi {
   skipPrompt: string;
   problemsSubtitle: string;
   unit: string;
+  altView?: string;
+  resultUnit: 'row' | 'document';
 }
 
 const SQL: LabUi = {
@@ -16,6 +18,7 @@ const SQL: LabUi = {
   skipPrompt: 'Already know SQL?',
   problemsSubtitle: 'Original SQL challenges, easy to hard',
   unit: 'rows',
+  resultUnit: 'row',
 };
 
 const UI: Partial<Record<LabLanguage, LabUi>> = {
@@ -27,6 +30,18 @@ const UI: Partial<Record<LabLanguage, LabUi>> = {
     skipPrompt: 'Already know the MongoDB basics?',
     problemsSubtitle: 'Original MongoDB challenges, easy to hard',
     unit: 'documents',
+    altView: 'Documents',
+    resultUnit: 'document',
+  },
+  redis: {
+    monaco: 'redis',
+    editorTitle: 'Redis CLI',
+    starter: '# Write your Redis commands here\n',
+    skipPrompt: 'Already know the Redis basics?',
+    problemsSubtitle: 'Original Redis challenges, easy to hard',
+    unit: 'keys',
+    altView: 'Transcript',
+    resultUnit: 'row',
   },
 };
 

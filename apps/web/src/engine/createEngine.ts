@@ -5,6 +5,7 @@ import { WorkerEngine } from './WorkerEngine';
 const WORKERS: Partial<Record<LabLanguage, () => Worker>> = {
   sql: () => new Worker(new URL('./engine.worker.ts', import.meta.url), { type: 'module' }),
   mongodb: () => new Worker(new URL('./mongo.worker.ts', import.meta.url), { type: 'module' }),
+  redis: () => new Worker(new URL('./redis.worker.ts', import.meta.url), { type: 'module' }),
 };
 
 export function createEngine(language: LabLanguage): Engine {
@@ -12,4 +13,3 @@ export function createEngine(language: LabLanguage): Engine {
   if (!spawn) throw new Error(`No engine available for ${language} labs yet.`);
   return new WorkerEngine(spawn, language);
 }
-

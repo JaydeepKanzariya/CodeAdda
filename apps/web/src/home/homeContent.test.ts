@@ -43,8 +43,9 @@ describe('hero demo', () => {
 });
 
 describe('copy tables', () => {
-  it('has card copy for exactly the upcoming labs', () => {
-    expect(Object.keys(UPCOMING_COPY).sort()).toEqual([...UPCOMING_LABS].sort());
+  it('has no upcoming labs while retaining reusable copy entries', () => {
+    expect(UPCOMING_LABS).toEqual([]);
+    expect(Object.keys(UPCOMING_COPY).sort()).toEqual(['MongoDB', 'PostgreSQL', 'Redis']);
   });
 
   it('has three steps and four features', () => {

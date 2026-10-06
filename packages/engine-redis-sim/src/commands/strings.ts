@@ -1,0 +1,20 @@
+export { arityError } from "../registry";
+export const STRING_COMMANDS = [
+  "SET",
+  "GET",
+  "GETDEL",
+  "GETEX",
+  "SETEX",
+  "SETNX",
+  "MSET",
+  "MSETNX",
+  "MGET",
+  "APPEND",
+  "STRLEN",
+  "GETRANGE",
+  "INCR",
+  "DECR",
+  "INCRBY",
+  "DECRBY",
+  "INCRBYFLOAT",
+] as const;

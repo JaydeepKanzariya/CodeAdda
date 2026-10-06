@@ -144,7 +144,7 @@ export function LessonFlow({ lab, tab, item, number, engine }: LessonFlowProps) 
             <div className="p-5">
               {panel === 'results' ? (
                 <div className="fs-results">
-                  <ResultsPanel result={engine.result} running={engine.running} />
+                  <ResultsPanel result={engine.result} running={engine.running} altView={ui.altView} resultUnit={ui.resultUnit} />
                 </div>
               ) : (
                 <div className="fs-schema">

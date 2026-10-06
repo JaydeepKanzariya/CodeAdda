@@ -37,7 +37,10 @@ describe('createEngine', () => {
     expect(spawned[0]?.url).toMatch(/mongo\.worker\.ts$/);
   });
 
-  it('throws for redis', () => {
-    expect(() => createEngine('redis')).toThrow(/No engine available for redis/);
+  it('spawns redis.worker.ts for redis', () => {
+    vi.stubGlobal('Worker', MockWorker);
+    const engine = createEngine('redis');
+    expect(engine.kind).toBe('redis');
+    expect(spawned[0]?.url).toMatch(/redis\.worker\.ts$/);
   });
 });

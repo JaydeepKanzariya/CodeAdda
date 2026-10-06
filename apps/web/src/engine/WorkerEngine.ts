@@ -97,7 +97,7 @@ export class WorkerEngine implements Engine {
   }
 
   snapshot(query: string): Promise<QueryResult> {
-    return this.run(query);
+    return this.call('snapshot', [query]);
   }
 
   describe(): Promise<SchemaInfo> {

@@ -1,0 +1,45 @@
+{
+  "id": "redis",
+  "title": "Redis Lab",
+  "subtitle": "From your first key to Streams, caching and production patterns",
+  "sidebarTitle": "The Redis Path",
+  "sidebarSubtitle": "Beginner to advanced, one key at a time",
+  "problemsSubtitle": "Original Redis challenges, easy to hard",
+  "language": "redis",
+  "chapters": [
+    "Meet Redis",
+    "Strings & Counters",
+    "Expiration",
+    "Hashes",
+    "Lists",
+    "Sets",
+    "Sorted Sets",
+    "Finding Keys Safely",
+    "Transactions",
+    "Bitmaps & HyperLogLog",
+    "Streams",
+    "Caching Patterns",
+    "Locks & Rate Limiters",
+    "Data Modelling",
+    "Redis in Production"
+  ],
+  "problemGroups": [
+    "Warm-up",
+    "Everyday Redis",
+    "Production Patterns"
+  ],
+  "levels": [
+    {
+      "title": "Beginner",
+      "from": "Meet Redis"
+    },
+    {
+      "title": "Intermediate",
+      "from": "Sets"
+    },
+    {
+      "title": "Advanced",
+      "from": "Streams"
+    }
+  ]
+}

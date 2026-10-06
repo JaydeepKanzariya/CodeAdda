@@ -238,9 +238,9 @@ test.describe('home page', () => {
   test('renders every band and leads into the first lesson, offline', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Pull up a chair');
-    const labs = page.getByRole('region', { name: 'Three labs are open. One more is cooking.' });
+    const labs = page.getByRole('region', { name: 'Four labs are open.' });
     await expect(labs.getByRole('listitem')).toHaveCount(4);
-    await expect(page.getByRole('link', { name: /Redis/ })).toHaveCount(0);
+    await expect(labs.getByRole('link', { name: /Redis/ })).toHaveCount(1);
     await expect(page.getByRole('heading', { name: 'Read, run, check, repeat' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Built so practice turns into habit.' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'The database is already running.' })).toBeVisible();
@@ -333,9 +333,8 @@ test.describe('postgres lab', () => {
     const chapters = page.getByRole('navigation', { name: 'Chapters' });
     await expect(chapters.getByRole('heading', { level: 3 })).toHaveText(['Beginner', 'Intermediate', 'Advanced']);
     await page.goto('/');
-    const labs = page.getByRole('region', { name: 'Three labs are open. One more is cooking.' });
+    const labs = page.getByRole('region', { name: 'Four labs are open.' });
     await expect(labs.getByRole('link', { name: /PostgreSQL/ })).toHaveAttribute('href', '/postgres');
-    await expect(labs.getByText('Coming soon')).toHaveCount(1);
   });
 });
 
@@ -384,6 +383,69 @@ test.describe('mongodb lab', () => {
     await expect(page.getByText('Correct!')).toBeVisible();
   });
 
+  test.describe('redis lab', () => {
+    test('the first lesson solves and the editor is Redis CLI', async ({ page }) => {
+      await page.goto('/redis');
+      await expect(page.getByRole('heading', { level: 1, name: 'Your first key' })).toBeVisible();
+      await expect(page.getByRole('region', { name: 'Redis CLI' })).toBeVisible();
+      await page.getByRole('button', { name: /Solution/ }).click();
+      await page.getByRole('button', { name: 'Load into editor' }).click();
+      await page.getByRole('button', { name: 'Run Query' }).click();
+      await expect(page.getByText('Correct!')).toBeVisible();
+    });
+
+    test('skip banner reaches the first Sets lesson without a reload', async ({ page }) => {
+      await page.goto('/redis');
+      await page.evaluate(() => ((window as unknown as { __noReload: boolean }).__noReload = true));
+      await page.getByRole('link', { name: 'Skip to Intermediate →' }).click();
+      await expect(page).toHaveURL(/\/redis\/lessons\/sadd-smembers$/);
+      await expect(page.getByRole('heading', { level: 1, name: 'Unique members' })).toBeVisible();
+      expect(await page.evaluate(() => (window as unknown as { __noReload?: boolean }).__noReload)).toBe(true);
+    });
+
+    test('switches between Table and Transcript results', async ({ page }) => {
+      await page.goto('/redis');
+      await page.getByRole('button', { name: /Solution/ }).click();
+      await page.getByRole('button', { name: 'Load into editor' }).click();
+      await page.getByRole('button', { name: 'Run Query' }).click();
+      const viewToggle = page.getByRole('radiogroup', { name: 'Results view' });
+      await expect(viewToggle).toBeVisible();
+      await viewToggle.getByRole('radio', { name: 'Transcript' }).click();
+      await expect(page.locator('.fs-results').last()).toContainText('redis>');
+      await viewToggle.getByRole('radio', { name: 'Table' }).click();
+      await expect(page.locator('.fs-results').last().getByRole('table')).toBeVisible();
+    });
+
+    test('schema groups user keys and shows sample data', async ({ page }) => {
+      await page.goto('/redis');
+      await page.getByRole('tab', { name: 'Database Schema' }).click();
+      const users = page.getByRole('button', { name: /^user:\*/ }).first();
+      await expect(users).toContainText('12 keys');
+      await users.click();
+      await users.locator('xpath=..').getByRole('button', { name: /View sample data/i }).click();
+      await expect(page.getByRole('tab', { name: 'Query Results' })).toHaveAttribute('aria-selected', 'true');
+      await expect(page.locator('.fs-results')).toContainText('Amina Rao');
+    });
+
+    test('consumer groups lesson solves end to end', async ({ page }) => {
+      await page.goto('/redis/lessons/consumer-groups');
+      await page.getByRole('button', { name: /Solution/ }).click();
+      await page.getByRole('button', { name: 'Load into editor' }).click();
+      await page.getByRole('button', { name: 'Run Query' }).click();
+      await expect(page.getByText('Correct!')).toBeVisible();
+    });
+
+    test('home links to Redis without loading lab content', async ({ page }) => {
+      const urls: string[] = [];
+      page.on('request', (request) => { if (request.url().includes('lab-content/')) urls.push(request.url()); });
+      await page.goto('/');
+      const labs = page.getByRole('region', { name: 'Four labs are open.' });
+      await expect(labs.getByRole('link', { name: /Redis/ })).toHaveAttribute('href', '/redis');
+      await expect(page.getByText('Coming soon')).toHaveCount(0);
+      expect(urls).toEqual([]);
+    });
+  });
+
   test('skip banner jumps to Intermediate without a reload', async ({ page }) => {
     await page.goto('/mongodb');
     await expect(page.getByRole('heading', { level: 1, name: 'Your first find' })).toBeVisible();
@@ -429,13 +491,12 @@ test.describe('mongodb lab', () => {
     await expect(page.getByText('Correct!')).toBeVisible();
   });
 
-  test('home page links to MongoDB, has one coming soon (Redis), and does not load lab content', async ({ page }) => {
+  test('home page links to MongoDB and does not load lab content', async ({ page }) => {
     const urls: string[] = [];
     page.on('request', (r) => { if (r.url().includes('lab-content/')) urls.push(r.url()); });
     await page.goto('/');
-    const labs = page.getByRole('region', { name: 'Three labs are open. One more is cooking.' });
+    const labs = page.getByRole('region', { name: 'Four labs are open.' });
     await expect(labs.getByRole('link', { name: /MongoDB/ })).toHaveAttribute('href', '/mongodb');
-    await expect(labs.getByText('Coming soon')).toHaveCount(1);
     expect(urls).toEqual([]);
   });
 });
