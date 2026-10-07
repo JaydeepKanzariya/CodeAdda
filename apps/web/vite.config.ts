@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { forbidBrowserSecrets } from './plugins/forbidSecrets';
 import { labContent } from './plugins/labContent';
 
 /**
@@ -20,7 +21,7 @@ function stripMonacoCdnDefault(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [stripMonacoCdnDefault(), labContent(), react(), tailwindcss()],
+  plugins: [forbidBrowserSecrets(), stripMonacoCdnDefault(), labContent(), react(), tailwindcss()],
   // PGlite ships its own WASM; pre-bundling breaks its asset URLs.
   // mingo is only imported by the MongoDB worker, which the dep scanner doesn't crawl; without this, the first
   // visit to a lab discovers it late and Vite re-optimizes and reloads the page.

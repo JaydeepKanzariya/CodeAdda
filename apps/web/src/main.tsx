@@ -5,6 +5,7 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
 import './styles/app.css';
 import { App } from './App';
+import { AuthProvider } from './auth';
 import { AppErrorBoundary } from './components/AppErrorBoundary';
 import { applyPrefs, prefsStore } from './state/prefs';
 
@@ -14,9 +15,11 @@ prefsStore.subscribe(() => applyPrefs(prefsStore.get()));
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AppErrorBoundary>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
     </AppErrorBoundary>
   </StrictMode>,
 );

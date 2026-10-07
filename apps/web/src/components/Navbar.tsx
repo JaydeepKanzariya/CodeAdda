@@ -1,13 +1,43 @@
-import { useEffect, useRef } from 'react';
+import { Suspense, lazy, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router';
 import { labSummaries, upcomingLabs } from '../content/registry';
 import { cx } from '../lib/cx';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
+import { useAuth } from '../auth';
+import { clerkKey } from '../auth/config';
+
+// Clerk's SDK is large, so it loads on demand and stays out of the main bundle.
+const ClerkNavAuth = lazy(() => import('../auth/ClerkNavAuth'));
+// The fake development sign-in. Vite turns import.meta.env.DEV into false in a production build, so this
+// branch, and the chunk behind it, never reaches the shipped site.
+const DevAuthControl = import.meta.env.DEV ? lazy(() => import('../auth/DevAuthControl')) : null;
 
 // Below md the strip swipes sideways: smaller links, no scrollbar, and a fade on the right edge
 // (pr-6 matches the fade width, so the last link can scroll fully clear of it).
 const LINK = 'whitespace-nowrap rounded-md px-2 py-1.5 text-xs font-medium md:px-3 md:text-sm';
+
+function AuthSlot() {
+  const { isAuthAvailable, isClerkConfigured } = useAuth();
+  if (!isAuthAvailable) return null;
+  if (isClerkConfigured && clerkKey) {
+    // Fixed width, so the theme toggle does not move when Clerk finishes loading.
+    return (
+      <div className="flex h-9 min-w-17 items-center justify-end">
+        <Suspense fallback={null}>
+          <ClerkNavAuth publishableKey={clerkKey} />
+        </Suspense>
+      </div>
+    );
+  }
+  // Development fallback (no Clerk key).
+  if (!DevAuthControl) return null;
+  return (
+    <Suspense fallback={null}>
+      <DevAuthControl />
+    </Suspense>
+  );
+}
 
 export function Navbar() {
   const strip = useRef<HTMLDivElement>(null);
@@ -42,7 +72,7 @@ export function Navbar() {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <ThemeToggle />
-          <span aria-hidden="true" className="hidden size-7 rounded-full bg-[conic-gradient(var(--color-accent),var(--color-info),var(--color-success),var(--color-accent))] opacity-70 md:block" />
+          <AuthSlot />
         </div>
       </nav>
     </header>

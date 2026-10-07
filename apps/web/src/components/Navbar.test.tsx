@@ -2,13 +2,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
+import { AuthProvider } from '../auth';
 import { Navbar } from './Navbar';
 
 const renderAt = (path: string) =>
   render(
-    <MemoryRouter initialEntries={[path]}>
-      <Navbar />
-    </MemoryRouter>,
+    <AuthProvider>
+      <MemoryRouter initialEntries={[path]}>
+        <Navbar />
+      </MemoryRouter>
+    </AuthProvider>,
   );
 
 describe('Navbar', () => {
@@ -37,5 +40,10 @@ describe('Navbar', () => {
 
   it('renders where scrollIntoView does not exist', () => {
     expect(() => renderAt('/sql/lessons/select-all')).not.toThrow();
+  });
+
+  it('renders the Sign in button when signed out', async () => {
+    renderAt('/');
+    expect(await screen.findByRole('button', { name: 'Sign in' })).toBeInTheDocument();
   });
 });
