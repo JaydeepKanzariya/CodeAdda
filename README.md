@@ -14,13 +14,25 @@ npm run dev          # http://localhost:5173
 ```
 
 `/` is the home page (the labs, how it works, and a live example); `/sql` opens the SQL lab; `/postgres` opens the PostgreSQL lab; `/mongodb` opens the MongoDB lab; `/redis` opens the Redis lab.
-Everything runs in the browser, with no server and no account.
+Everything runs in the browser, with no server. Signing in is optional (see [Sign-in](#sign-in-optional)).
 
 ## Deploy to Vercel
 
-This repository includes [vercel.json](./vercel.json) for the npm-workspaces monorepo. In Vercel, import the repository and keep the project root at the repository root; no separate root directory or environment variables are required.
+This repository includes [vercel.json](./vercel.json) for the npm-workspaces monorepo. In Vercel, import the repository and keep the project root at the repository root; no separate root directory is required. Environment variables are optional: add `VITE_CLERK_PUBLISHABLE_KEY` only if you want sign-in (see below).
 
 The configuration runs `npm install`, builds with `npm run build`, serves `apps/web/dist`, and rewrites client-side routes to `index.html` so deep links to lessons and problems work after deployment.
+
+## Sign-in (optional)
+
+Sign-in uses [Clerk](https://clerk.com). With a key, the navbar shows Clerk's own Sign in modal, avatar menu and account screens (Profile, Security, Connected accounts). Clerk is loaded on demand, so visitors who never sign in do not download it.
+
+1. Create an app in the [Clerk dashboard](https://dashboard.clerk.com) and enable GitHub and Google sign-in, first and last name, and passwords.
+2. Copy `apps/web/.env.example` to `apps/web/.env.local` and paste the **publishable** key (it starts with `pk_`). In Vercel, add the same `VITE_CLERK_PUBLISHABLE_KEY` under Project Settings, Environment Variables.
+3. Use a `pk_live_` key for the real site. A `pk_test_` key works everywhere but shows a development banner.
+
+Never put a secret key (`sk_`) in a `VITE_` variable: those are copied into the public website. The build refuses to run if it finds one. `.env` files are git-ignored.
+
+Without a key, `npm run dev` uses a fake in-memory sign-in so the interface can be built, and says so on the account screen. A production build without a key offers no sign-in at all.
 
 ## Checks
 

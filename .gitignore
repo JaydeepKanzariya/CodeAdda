@@ -4,3 +4,8 @@ dist/
 test-results/
 playwright-report/
 *.log
+
+# Local environment files can hold keys; only the example (no values) is committed.
+.env
+.env.*
+!.env.example

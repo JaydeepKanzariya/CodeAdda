@@ -11,5 +11,8 @@ export default defineConfig({
     url: 'http://localhost:5199',
     reuseExistingServer: true,
     timeout: 120_000,
+    // Tests block every request that leaves localhost, so they must never load Clerk. An empty value
+    // beats any key in a developer's .env.local and keeps the browser tests on the key-less sign-in.
+    env: { VITE_CLERK_PUBLISHABLE_KEY: '' },
   },
 });

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/react": "^6.17.6",
     "@codeadda/content-loader": "*",
     "@codeadda/core": "*",
     "@codeadda/engine-mongo-sim": "*",
